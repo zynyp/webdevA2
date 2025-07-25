@@ -1,0 +1,968 @@
+@font-face {
+    font-family: "Rubik";
+    src: url("fonts/Rubik/weighted.ttf");
+
+    font-display: swap; /* Allow the font to asynchronously load without blocking an extended period of time, telling the browser to use fallback fonts (see below) immediately when the page is ready for the first paint (when the browser starts to render the page) until the font has fully loaded in  */
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("fonts/Manrope/weighted.ttf");
+
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Special Gothic Expanded One";
+    src: url("fonts/SpecialGothicExpandedOne/regular.ttf");
+
+    font-display: swap;
+}
+
+/* Global CSS variables (custom properties) for reusability and readability */
+:root {
+    --theme-bg: #f4f4f4;
+    --theme-bg-variant: #e2e8ee;
+
+    --theme-btn: #bac7d4;
+
+    --theme-text: #0d0d0d;
+    --theme-text-variant: #8a8a8a;
+
+    --theme-shadow: #00000060;
+
+    --theme-box-1: #f3a49b;
+    --theme-box-2: #fbe691;
+    --theme-box-3: #93e5a2;
+    --theme-box-4: #a3a8f2;
+
+    /* Multiple font families for each variable so that fallback built-in fonts will be displayed if the preceding fonts do not exist/have not finished loading. */
+    --font-primary: "Rubik", "Segoe UI", "Trebuchet MS", Tahoma, Geneva, Verdana, sans-serif;
+    --font-secondary: "Manrope", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+
+    --font-title: "Special Gothic Expanded One", Arial, Helvetica, sans-serif;
+}
+
+/* Change the colours to suit users who use dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --theme-bg: #1b1b1b;
+        --theme-bg-variant: #1f2124;
+
+        --theme-btn: #2f333a;
+
+        --theme-text: #f9f9f9;
+        --theme-text-variant: #979797;
+
+        --theme-shadow: #ffffff60;
+
+        --theme-box-1: #3c1513;
+        --theme-box-2: #40340a;
+        --theme-box-3: #164323;
+        --theme-box-4: #1e183f;
+    }
+}
+
+* {
+    font-family: var(--font-primary);
+    color: var(--theme-text);
+
+    /* Allows transitioning of colours between light and dark mode to prevent sudden brightness change */
+    transition-property: color;
+    transition-duration: 1600ms;
+}
+
+/* For users who has reduced motion turned on */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-property: color !important /* "!important" used to override all previous styles */;
+        animation-name: none !important;
+    }
+}
+
+html, body {
+    overflow: hidden;
+
+    padding: 0;
+    margin: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--theme-bg);
+
+    transition-property: background-color;
+    transition-duration: 1600ms;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-block: 0;
+
+    font-family: var(--font-secondary);
+}
+
+small { font-size: 0.6rem; }
+
+button {
+    padding: 0;
+    margin: 0;
+
+    background-color: transparent;
+
+    border-style: none;
+    outline-style: none;
+
+    appearance: none; /* Removes the default browser styles to make sure everything is consistent and hidden unset styles do not affect the final look of the button */
+    cursor: pointer; /* Show the user that the button is clickable */
+}
+
+input:is([type="text"], [type="number"]) {
+    padding: 0;
+    margin: 0;
+
+    background-color: transparent;
+
+    border-radius: 4px;
+    border-style: none;
+    outline-style: none;
+
+    appearance: none;
+}
+
+input:is([type="text"], [type="number"]):focus {
+    border-width: 1px;
+    border-color: var(--theme-text);
+    border-style: solid;
+}
+
+input:is([type="text"], [type="number"])::placeholder { color: var(--theme-text-variant); }
+
+fieldset { border-color: var(--theme-text); }
+legend {
+    padding-inline: 6px;
+
+    text-align: start;
+}
+
+img {
+    width: 100%;
+
+    border-radius: 12px;
+}
+
+figure > figcaption {
+    margin-block: 0.3rem;
+
+    font-size: 0.6rem;
+    text-align: center;
+}
+
+figure > figcaption > a { padding-inline-start: 0.6rem; }
+
+svg {
+    width: 100%;
+
+    fill: transparent;
+
+    stroke: var(--theme-text);
+    stroke-width: 4px;
+
+    transition-property: stroke;
+    transition-duration: 1600ms;
+}
+
+table {
+    width: 100%; /* Make sure the table will take up the most amount of space for more readable content */
+
+    border-collapse: collapse; /* Join any borders in the table to prevent double borders */
+
+    table-layout: fixed; /* Renders the table with a faster internal CSS algorithm */
+}
+
+th, td {
+    font-size: 0.6rem;
+    text-align: center;
+
+    border-width: 1px;
+    border-style: solid;
+}
+
+ul { margin-block: 0; }
+
+body > header {
+    /* Allow elements to be positioned on top of the footer image */
+    position: relative;
+    z-index: 1;
+
+    padding-inline: 0.3rem;
+    padding-block: 0.5rem;
+
+    transition-property: translate;
+    transition-duration: 1200ms;
+
+    translate: 0% 0%;
+}
+
+@media only screen and (min-width: 800px) {
+    body > header > div {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+body > header > div:nth-child(1) {
+    position: relative;
+    left: -100%;
+
+    padding-block: min(max(0.2rem, 2dvw), 1rem);
+
+    transition-property: left;
+    transition-duration: 1200ms;
+}
+
+body > header > div:nth-child(1) > h1 {
+    font-family: var(--font-title);
+    font-size: min(max(2rem, 10dvw), 5rem);
+    text-transform: uppercase;
+}
+
+body > header > div:nth-child(1) > a, main > footer > button {
+    font-size: min(max(0.7rem, 2dvw), 0.9rem);
+    text-decoration: none;
+
+    transition-property: font-size;
+    transition-duration: 200ms;
+}
+
+body > header > div:nth-child(1) > a:is(:hover, :active), main > footer > button:is(:hover, :active) { font-size: min(max(0.8rem, 2.4dvw), 1rem); }
+
+body > header > div:nth-child(2) > section > nav > ul {
+    padding-inline-start: 1rem;
+    margin-block: 0;
+
+    list-style-type: none;
+}
+
+body > header > div:nth-child(2) > section > nav > ul > li {
+    margin-inline-start: 0rem;
+
+    width: fit-content;
+
+    font-size: min(max(0.4rem, 3.2dvw), 1.2rem);
+
+    transition-property: margin-inline-start;
+    transition-duration: 200ms;
+}
+
+/* Ensures that any child elements in the same element can only be styled if it is the focused sibling or there are no focused siblings in the parent element */
+body > header > div:nth-child(2) > section > nav > ul:not(:focus-within) > li:hover, body > header > div:nth-child(2) > section > nav > ul > li:focus-within { margin-inline-start: 0.6rem; }
+
+/* Add a ::before pseudo-element (a sort-of child element) to represent the arrows to allow more styles applied onto the arrow */
+body > header > div:nth-child(2) > section > nav > ul > li::before {
+    position: relative;
+    inset-inline-start: 0%;
+
+    margin-inline-end: 0.2rem;
+
+    opacity: 100%;
+
+    transition-property: inset-inline-start, opacity;
+    transition-duration: 200ms;
+}
+
+body > header > div:nth-child(2) > section > nav > ul > li:active::before {
+    inset-inline-start: 20%;
+
+    opacity: 0%;
+}
+
+body > header > div:nth-child(2) > section > nav > ul > li > button { font-size: min(max(0.4rem, 3.2dvw), 1.2rem); }
+body > header > div:nth-child(2) > section > nav > ul > li > button:focus { outline: none; }
+
+body > header > div:nth-child(2) {
+    display: flex;
+
+    flex-direction: column;
+    gap: 0.8rem;
+
+    padding-inline: 0.3rem;
+}
+
+body > header > div:nth-child(2) > section > h2 {
+    margin-block: min(max(0.2rem, 2dvw), 0.6rem);
+
+    font-size: min(max(0.8rem, 4dvw), 1.6rem);
+    font-weight: 900;
+}
+
+body > header > div:nth-child(2) > section:nth-child(1) {
+    position: relative;
+    left: -100%;
+
+    transition-property: left;
+    transition-duration: 1200ms;
+    transition-delay: 200ms;
+}
+
+body > header > div:nth-child(2) > section:nth-child(1) > nav > ul > li::before { content: "→"; }
+
+body > header > div:nth-child(2) > section:nth-child(2) {
+    position: relative;
+    right: -100%;
+
+    transition-property: right;
+    transition-duration: 1200ms;
+    transition-delay: 400ms;
+}
+
+body > header > div:nth-child(2) > section:nth-child(2) > nav > ul > li::before { content: "←"; }
+
+body > header > div:nth-child(3) {
+    box-sizing: border-box;
+    display: none;
+    position: absolute;
+    top: -100%;
+    left: 0;
+
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    width: 100%;
+    height: 56px;
+
+    background-color: var(--theme-bg-variant);
+
+    transition-property: top, background-color;
+    transition-duration: 1200ms;
+    transition-delay: 400ms;
+}
+
+body > header > div:nth-child(3) button {
+    width: 30px;
+    height: 30px;
+
+    background-image: url("images/icon-atlas-light.png");
+    background-position-x: 0px;
+    background-size: auto 90px;
+
+    outline: none;
+
+    transition-property: scale;
+    transition-duration: 200ms;
+}
+
+body > header > div:nth-child(3):not(:focus-within) button:hover, body > header > div:nth-child(3) button:focus { scale: 120%; }
+
+body > header > div:nth-child(3) > div {
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+@keyframes rotate-360 {
+    from { rotate: 360deg; }
+    to { rotate: 0deg; }
+}
+
+#reset-site-btn { background-position-y: top; }
+#reset-site-btn:active {
+    animation-name: rotate-360;
+    animation-duration: 600ms;
+    animation-iteration-count: infinite;
+}
+
+#toggle-fullscreen-btn { background-position-y: bottom; }
+#open-header-btn { background-position-y: center; }
+
+@media (prefers-color-scheme: dark) { body > header > div:nth-child(3) button { background-image: url("images/icon-atlas-dark.png"); } }
+
+main {
+    display: none;
+    overflow: auto;
+    position: absolute;
+    top: 56px;
+    left: 0;
+
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    height: calc(100% - 56px);
+
+    opacity: 0%;
+
+    transition-property: opacity, rotate, scale, translate;
+    transition-duration: 1200ms;
+    transition-delay: 400ms;
+
+    rotate: 20deg;
+    scale: 80%;
+    transform-origin: center;
+    translate: 0% 20%;
+
+    scroll-behavior: smooth;
+}
+
+main h1 {
+    margin-block-start: 0.6rem;
+    margin-block-end: 1.6rem;
+
+    min-width: 100%;
+
+    font-size: 2.4rem;
+    text-align: start;
+}
+
+main h2 {
+    margin-block: 0.6rem;
+
+    font-size: 1.6rem;
+}
+
+main section {
+    display: flex;
+
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+main article { max-width: 600px; }
+main > div {
+    display: none;
+
+    padding-block: 8px;
+
+    width: calc(100% - 32px);
+    max-width: 640px;
+}
+
+main > div > hr { margin-block: 2rem; }
+
+main > div[data-page-id="pronunciation-guide"] section { gap: 0rem; }
+main > div[data-page-id="pronunciation-guide"] h2 {
+    margin-block-start: 1.2rem;
+    margin-block-end: 0.8rem;
+}
+
+main > div[data-page-id="pronunciation-guide"] h3 { margin-block: 0.4rem; }
+main > div[data-page-id="pronunciation-guide"] h3:not(:is(+ table)) { margin-block-start: 0.8rem; }
+
+main > div[data-page-id="pronunciation-guide"] table button {
+    width: 100%;
+
+    /* outline does not shift content and is not added onto the element's size */
+    outline-width: 2px;
+    outline-color: var(--theme-text);
+    outline-style: none;
+}
+main > div[data-page-id="pronunciation-guide"] table button:focus {
+    outline-style: solid;
+
+    transition-property: outline-color;
+    transition-duration: 1600ms;
+}
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) { position: relative; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+}
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) td {
+    position: absolute;
+
+    white-space: nowrap;
+
+    border-width: 0px;
+    border-style: none;
+}
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table button {
+    padding-inline: 0.3rem;
+    padding-block: 0.2rem;
+
+    width: fit-content;
+
+    background-color: var(--theme-btn);
+
+    border-radius: 0.2rem;
+
+    transition-property: background-color;
+    transition-duration: 1600ms;
+}
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td { top: 15px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(1) { left: 0px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(2) { left: 32px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(3) { left: 224px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(4) { left: 270px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(5) { left: 312px; }
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td { top: 80px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(1) { left: 36px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(2) { left: 78px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(3) { left: 270px; }
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(3) > td { top: 115px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(3) > td:nth-child(1) { left: 170px; }
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td { top: 145px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(1) { left: 96px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(2) { left: 244px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(3) { left: 290px; }
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td { top: 210px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td:nth-child(1) { left: 122px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td:nth-child(2) { left: 160px; }
+
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > svg { width: 320px; }
+
+main > div[data-page-id="vocabulary-list"] > section {
+    gap: 0.2rem;
+
+    margin-top: 1.2rem;
+}
+
+#list-of-topics {
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+
+    padding-inline-start: 0;
+
+    width: 100%;
+
+    list-style-type: none;
+}
+
+#list-of-topics button {
+    padding-inline: 2.4rem;
+    padding-block: 0.6rem;
+
+    font-weight: 600;
+    font-size: 1rem;
+
+    background-color: var(--theme-btn);
+
+    border-radius: 0.6rem;
+
+    transition-property: background-color, filter, scale;
+    transition-duration: 200ms;
+}
+
+#list-of-topics:not(:is(:focus-within)) button:hover, #list-of-topics button:focus {
+    filter: brightness(80%);
+
+    scale: 105%;
+}
+
+@media (prefers-color-scheme: dark) { #list-of-topics:not(:is(:focus-within)) button:hover, #list-of-topics button:focus { filter: brightness(120%); } }
+
+#topic-card {
+    box-sizing: border-box;
+    display: flex;
+
+    flex-direction: column;
+    gap: 1.6rem;
+    align-items: center;
+
+    padding: 16px;
+
+    width: 100%;
+
+    background-color: var(--theme-bg-variant);
+
+    border-radius: 16px;
+
+    transition-property: background-color;
+    transition-duration: 1600ms;
+}
+
+#topic-card > p { margin-block: 0; }
+
+#topic-card > div {
+    display: flex;
+
+    flex-direction: column;
+    gap: 0.6rem;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 400px;
+}
+
+#topic-card article {
+    display: flex;
+
+    flex-direction: row;
+    gap: 0.8rem;
+    align-items: center;
+
+    padding-inline: 0.6rem;
+    padding-block: 0.2rem;
+
+    background-color: var(--theme-btn);
+
+    border-radius: 0.6rem;
+
+    transition-property: background-color;
+    transition-duration: 1600ms;
+}
+
+#topic-card article h3 { font-size: 1.4rem; }
+#topic-card article p { text-align: center; }
+
+@media only screen and (min-width: 800px) {
+    #topic-card > div {
+        display: grid;
+
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    #topic-card article {
+        flex-direction: column;
+
+        padding-block: 0.6rem;
+    }
+
+    #topic-card article p { margin-block: 0.4rem; }
+}
+
+main > div[data-page-id="minigame"] { height: 100%; }
+main > div[data-page-id="minigame"] section { display: block; }
+
+main > div[data-page-id="minigame"] > h1 {
+    margin-block-start: 0.6rem;
+    margin-block-end: 0.8rem;
+
+    font-size: 2.4rem;
+
+    transition-property: margin-block-start, margin-block-end, font-size;
+    transition-duration: 600ms;
+}
+
+main > div[data-page-id="minigame"] > p {
+    margin-block-start: 0.2rem;
+    margin-block-end: 1.6rem;
+
+    font-size: 1rem;
+
+    transition-property: margin-block-start, margin-block-end, font-size;
+    transition-duration: 600ms;
+}
+
+main[data-current-page="origins-of-hokkien"] > div[data-page-id="origins-of-hokkien"] { display: block; }
+main[data-current-page="usage-in-singapore"] > div[data-page-id="usage-in-singapore"] { display: block; }
+main[data-current-page="pronunciation-guide"] > div[data-page-id="pronunciation-guide"] { display: block; }
+main[data-current-page="vocabulary-list"] > div[data-page-id="vocabulary-list"] { display: block; }
+main[data-current-page="minigame"] > div[data-page-id="minigame"] { display: block; }
+
+main[data-current-page="minigame"] > footer { display: none; } /* Hide the QR code when playing the minigame (to prevent distractions) */
+
+main > footer {
+    display: flex;
+
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+main > footer > figure {
+    display: none;
+
+    margin-block: 4px;
+
+    text-align: center;
+}
+
+@media only screen and (min-width: 800px) { main > footer > figure { display: block; } }
+
+main > footer img {
+    width: 120px;
+
+    border-radius: 2px;
+}
+
+#game-bounds {
+    box-sizing: border-box;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 16px;
+    border-width: 2px;
+    border-color: var(--theme-text);
+    border-style: solid;
+
+    transition-property: border-color;
+    transition-duration: 1600ms;
+
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#game-bounds > section {
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+
+    padding: 20px;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--theme-bg-variant);
+
+    transition-property: top, background-color;
+    transition-duration: 800ms;
+    transition-timing-function: ease-in;
+}
+
+#game-bounds > section > h2 {
+    margin-block: 0.6rem;
+
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+#game-bounds > section button {
+    padding-inline: 1.2rem;
+    padding-block: 0.4rem;
+
+    width: fit-content;
+
+    color: var(--theme-bg);
+
+    background-color: var(--theme-text);
+
+    border-radius: 1.8rem;
+
+    transition-property: color, background-color, scale;
+    transition-duration: 200ms;
+}
+
+#game-bounds > section button:is(:hover, :active) { scale: 110%; }
+
+#game-bounds > section:nth-of-type(1) {
+    top: 0%;
+    z-index: 4;
+}
+
+#game-bounds > section:nth-of-type(1) > form {
+    display: flex;
+
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: space-between;
+    align-items: center;
+
+    height: calc(100% - 1.4rem - 0.6rem * 2 - 12px);
+}
+
+#game-bounds > section:nth-of-type(1) > form > div {
+    display: flex;
+
+    flex-direction: column;
+    gap: 0.5rem;
+
+    width: 100%;
+}
+
+#game-bounds > section:nth-of-type(1) > form > div > fieldset:nth-child(2) { text-align: center; }
+#game-bounds > section:nth-of-type(1) > form > div > fieldset:nth-child(2) :is(label, input) { width: 60px; }
+
+#game-bounds > section:nth-of-type(2) {
+    display: none;
+    top: -100%;
+    z-index: 3;
+
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#game-bounds > section:nth-of-type(2) > div { text-align: center; }
+#game-bounds > section:nth-of-type(2) > div > h2 {
+    margin-block: 0.6rem;
+
+    font-size: 1.8rem;
+}
+
+#game-bounds > div:nth-of-type(1) {
+    display: none;
+    position: relative;
+
+    flex-basis: 80%;
+}
+
+#game-bounds > div:nth-of-type(2) {
+    display: none;
+
+    flex-basis: 20%;
+    flex-direction: row-reverse;
+    gap: 10px;
+    justify-content: end;
+    align-items: center;
+
+    padding: 8px;
+}
+
+#game-bounds > div:nth-of-type(3) {
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+#game-bounds > div:nth-of-type(3) > p {
+    display: flex;
+
+    flex-direction: row;
+    justify-content: space-between;
+
+    margin-inline: 0.8rem;
+}
+
+#game-bounds > hr {
+    width: 100%;
+
+    border-style: none;
+
+    border-block-start-width: 2px;
+    border-block-start-color: var(--theme-text);
+    border-block-start-style: solid;
+
+    transition-property: border-block-start-color;
+    transition-duration: 1600ms;
+}
+
+#game-bounds article {
+    padding: 16px;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    transition-property: background-color;
+    transition-duration: 1600ms;
+}
+
+#game-bounds .answer-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    width: fit-content;
+    max-width: 160px;
+
+    transition-property: scale;
+    transition-duration: 200ms;
+
+    scale: 0%;
+}
+
+#game-bounds .question-box {
+    position: relative;
+    left: -100%;
+
+    width: 80px;
+    min-width: 80px;
+    height: fit-content;
+    max-height: 100%;
+
+    transition-property: left, scale;
+    transition-duration: 200ms;
+}
+
+#game-bounds .question-box > h2 { font-size: 0.8rem; }
+
+#game-bounds #game-countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    margin: 0;
+
+    font-size: 4.8rem;
+    font-weight: 900;
+    white-space: nowrap;
+
+    transition-property: scale;
+    transition-duration: 600ms;
+    transition-delay: 100ms;
+
+    translate: -50% -50%;
+}
+
+body > footer > img {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+
+    padding: 36px;
+
+    width: calc(100% - 12px);
+    max-width: 600px;
+
+    background-image: radial-gradient(closest-side, var(--theme-shadow) 60%, transparent); /* format of radial-gradient: <target> (the end target of the gradient; where the gradient will stop from the centre), <starting-color> <starting-position> (where the starting point of the colours start to transition from the centre outwards), <ending-color> */
+
+    border-radius: 100%;
+
+    transition-property: background-image, rotate, translate;
+    transition-duration: 1200ms;
+
+    rotate: -30deg;
+    translate: -50% 100%;
+
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body > footer > img:active { cursor: grabbing; }
+
+noscript {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+
+    padding-inline: 0.3rem;
+    padding-block: 0.5rem;
+
+    width: 100%;
+    height: 100%;
+
+    text-align: center;
+}
+
+noscript * { max-width: 400px; }

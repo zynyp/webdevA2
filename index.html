@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Did not include "maximum-scale=1.0, user-scalable=no" for accessibility reasons -->
+
+        <!-- Add a title element to include a proper site title in the browser tab -->
+        <title>🇸🇬 Singaporean Hokkien</title>
+
+        <!-- Add link elements for favicon (image beside the site title) -->
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="images/favicon.png">
+
+        <meta name="application-name" content="Singaporean Hokkien Guide">
+        <meta name="description" content="A simple website guiding you through on basic Hokkien and its origins and usage.">
+        <meta name="keywords" content="Hokkien, Hokkien language, Singaporean Hokkien, Singapore, language learning">
+
+        <!-- Meta elements to properly display a real description and title on search engines -->
+        <meta name="author" content="Zong Yang">
+        <meta name="creator" content="Zong Yang">
+        <meta name="copyright" content="Zong Yang">
+        <meta name="publisher" content="Github Pages">
+
+        <!-- Meta elements for Open Graph Protocol (used by websites like Facebook to display the site's link preview) -->
+        <meta property="og:title" content="Singaporean Hokkien Guide">
+        <meta property="og:description" content="A simple website guiding you through on basic Hokkien and its origins and usage.">
+        <meta property="og:url" content="https://zynyp.github.io/">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://zynyp.github.io/favicon.ico">
+
+        <!-- Meta elements for Twitter to display the site's link preview -->
+        <meta name="twitter:title" content="Singaporean Hokkien Guide">
+        <meta name="twitter:description" content="A simple website guiding you through on basic Hokkien and its origins and usage.">
+        <meta name="twitter:image" content="https://zynyp.github.io/twitter-preview.png">
+        <meta name="twitter:card" content="summary_large_image">
+
+        <meta name="mobile-web-app-cable" content="yes">
+        <meta name="apple-mobile-web-app-cable" content="yes">
+
+        <meta name="referrer" content="same-origin"> <!-- Removes the "Referer" HTTP request header from all cross-site (to third-party websites) requests, which can be used to identify where you came from those websites -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; font-src 'self';"> <!-- Checks what the site can run and fetch from, especially third-party websites, for security reasons TODO: remember to remove 'unsafe-inline' for submission -->
+
+        <meta name="robots" content="nofollow, noimageindex"> <!-- Do not allow "robots" (automated bots) to associate or connect any links shown on the website (nofollow). Do not show any images from this website on search engines (noimageindex) -->
+
+        <link rel="stylesheet" href="style.css">
+        <script src="main.js" defer></script>
+
+        <link rel="manifest" href="manifest.webmanifest"> <!-- Use .webmanifest instead of .json to prepare for future additions or changes to manifest files -->
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1>Singaporean Hokkien</h1>
+                <a href="https://github.com/zynyp/zynyp.github.io" target="_blank" rel="noopener">→ Link to Repository</a> <!-- Adding "noopener" prohibits modification to the original site on the client side, which can pose a security risk -->
+            </div>
+
+            <div>
+                <section>
+                    <h2>History of Hokkien</h2>
+
+                    <nav>
+                        <ul>
+                            <li>
+                                <button type="button" data-open-page-id="origins-of-hokkien">Origins of Hokkien</button>
+                            </li>
+                            <li>
+                                <button type="button" data-open-page-id="usage-in-singapore">Usage in Singapore</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </section>
+
+                <section dir="rtl">
+                    <h2>Language Learning</h2>
+
+                    <nav>
+                        <ul>
+                            <li>
+                                <button type="button" data-open-page-id="pronunciation-guide">Pronunciation Guide</button>
+                            </li>
+                            <li>
+                                <button type="button" data-open-page-id="vocabulary-list">Vocabulary List</button>
+                            </li>
+                            <li>
+                                <button type="button" data-open-page-id="minigame">Minigame</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </section>
+            </div>
+
+            <div>
+                <div>
+                    <button id="reset-site-btn" type="button" title="Reset Site"></button>
+                    <button id="toggle-fullscreen-btn" type="button" title="Toggle Fullscreen"></button>
+                </div>
+
+                <button id="open-header-btn" type="button" title="Open Header"></button>
+            </div>
+        </header>
+
+        <main tabindex="-1" data-page-id="none"> <!-- Make this element non-focusable -->
+            <div data-page-id="origins-of-hokkien">
+                <h1 tabindex="0">Origins of Hokkien</h1> <!-- Make all headings key-focusable  -->
+
+                <section>
+                    <h2 tabindex="0">Movement of Hokkien Throughout the Years</h2>
+
+                    <article>
+                        <h3 tabindex="0">Where It All Began...</h3>
+
+                        <figure>
+                            <img src="images/wu-yi-shan.webp" alt="Wu Yi Shan Mountain Range (武夷山)" title="Wu Yi Shan Mountain Range (武夷山)" width="540">
+                            <figcaption>
+                                The Wu Yi Shan (武夷山) mountain range in Fujian (福建) province
+                                <a href="https://www.asiaodysseytravel.com/images/china-tours/group-tours/wuyishan-bamboo-rafting-700-1.jpg" target="_blank" rel="noopener">Source</a>
+                            </figcaption>
+                        </figure>
+
+                        <div>
+                            <p>Hokkien (also known as "Amoy") evolved from Old Chinese and separated from the rest of the Chinese languages when the Han Chinese migrated from the north during the Three Kingdoms war in the third century AD, bringing their language with them and displacing the non-Chinese Baiyue people in the region.</p>
+                            <p>Though it evolved alongside Middle Chinese through military expeditions, sharing many grammatical features and giving Hokkien literary (more formal) pronunciations. But because of the mountainous nature of the Min region, it stayed relatively isolated from the rest of the Chinese languages, keeping some of the archaic features of Old Chinese.</p>
+
+                            <p>As such, many linguists considered Hokkien (and other Min languages) to be separated from the rest of the Chinese language families, and the closest link to Old Chinese.</p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3 tabindex="0">The Spread of Hokkien and Its Migration to Singapore</h3>
+
+                        <figure>
+                            <img src="images/coolies.webp" alt="Coolies on a ship on the way to colonial Singapore" title="Coolies on a ship on the way to colonial Singapore" width="540">
+                            <figcaption>
+                                Coolies on a ship on the way to colonial Singapore (circa 1900)
+                                <a href="https://cassette.sphdigital.com.sg/image/thinkchina/1c122c8521b79ca3865165a23d9c6068e3b07525ce383c1650f55194771c84c8" target="_blank" rel="noopener">Source</a>
+                            </figcaption>
+                        </figure>
+
+                        <div>
+                            <p>When overseas trade bans were relaxed during the Qing dynasty around late 17th century, Xiamen was selected as one of the ports to be open to foreign trade, and overtook the city of Yuegang as the main port in the Fujian province, which also made the Xiamen (called "Amoy") dialect to become the main Hokkien dialect for trade and communication overseas.</p>
+                            <p>Thus when the British colonised Singapore and opened up the island as a tax-free haven, many of them migrated and settled onto the island, forming the first Chinese communities in Singapore, which included Hokkien communities.</p>
+
+                            <p>This gradually became the largest ethnically Chinese group on the island, and their language became a common language for general communication among Chinese communities.</p>
+                        </div>
+                    </article>
+                </section>
+            </div>
+
+            <div data-page-id="usage-in-singapore">
+                <h1 tabindex="0">Usage in Singapore</h1>
+
+                <section>
+                    <h2 tabindex="0">The Current Situation</h2>
+
+                    <article>
+                        <h3 tabindex="0">Usage among Singaporeans</h3>
+
+                        <figure>
+                            <img src="images/kopitiam.webp" alt="A coffeeshop (kopitiam) in Singapore" title="A coffeeshop (kopitiam) in Singapore" width="540">
+
+                            <figcaption>
+                                A coffeeshop (kopitiam) in Singapore
+                                <a href="https://commons.wikimedia.org/wiki/File:CoffeeShopSG.JPG" target="_blank" rel="noopener">Source</a>
+                            </figcaption>
+                        </figure>
+
+                        <div>
+                            <p>Starting from the 1800s, the Hokkien language was used not only for trade, but also as a lingua franca within Chinese communities to communicate with one another.</p>
+                            <p>But nowadays, the language is largely spoken among the older generations, with a small percentage of the younger generations being able to comprehend, but not proficient enough to speak the language.</p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3 tabindex="0">Decline of the Language</h3>
+
+                        <div>
+                            <p>While many regard the downfall of Hokkien communication in the 1970s, it was already declining in the early 20th century, which was brought about by the rise of Mandarin-medium schools in Singapore. This was further amplified by the promoting of Mandarin with the "Speak Mandarin Campaign", pushed by the Singaporean government, which also included the restricted and censorship of the use of Hokkien in mainstream media.</p>
+                            <p>It also brought along a negative side-effect from the public population, in which the language grew a reputation that it was the language for the "phai-khnia" ("bad kids" in Hokkien, referring to secret societies and gangs) and the lower-class.</p>
+
+                            <p>This prejudice is likely formed from educated Chinese families trying to distance themselves away from the Hokkien language, which also discouraged children from speaking it.</p>
+                        </div>
+                    </article>
+                </section>
+
+                <hr>
+
+                <section>
+                    <h2 tabindex="0">Revitalisation Efforts</h2>
+
+                    <div>
+                        <article>
+                            <h3 tabindex="0">Revitalisation of the Hokkien Language</h3>
+
+                            <div>
+                                <p>In the recent years, there has been some resurgence efforts in educating the youth about the Hokkien language and culture, with some community-made courses and classes and watchable content on social media platforms like TikTok and Instagram.</p>
+                                <p>While it is considered a rather niche subject by many, it still found profound success in engaging the younger generations, especially for those who are interested and willing to learn the language to communicate with their elders and preserve it for years to come.</p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+
+            <div data-page-id="pronunciation-guide">
+                <h1>Pronunciation Guide</h1>
+                <p>A list of tables that you can follow to pronounce every Hokkien character. Click on each phoneme in a table to hear how it is pronounced.</p>
+
+                <section>
+                    <h2>Consonants</h2>
+
+                    <article>
+                        <h3>Initial Consonants</h3>
+                        <p>The first part of a character and are optional consonants that start a character.</p>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" rowspan="2" colspan="2" aria-hidden="true">&nbsp;</th>
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <th scope="col" rowspan="2">Bilabial</th>
+                                    <th scope="col" colspan="2">Alveolar</th>
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <th scope="col" rowspan="2">Alveolo-Palatal</th>
+                                    <th scope="col" rowspan="2">Velar</th>
+                                    <th scope="col" rowspan="2">Glottal</th>
+                                </tr>
+
+                                <tr>
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <th scope="col">Plain</th>
+                                    <th scope="col">Affr.</th>
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <!-- EMPTY PLACEHOLDER -->
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th scope="row" colspan="2">Nasal</th>
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="557" data-sound-length="1860">m [m]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="2818" data-sound-length="1782">n [n]</button>
+                                    </td>
+
+                                    <td colspan="2">&nbsp;</td>
+
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="5045" data-sound-length="1983">ng [ŋ]</button>
+                                    </td>
+
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row" rowspan="3">Plosive</th>
+                                    <th scope="row">Plain</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="8075" data-sound-length="1949">p [p]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="10536" data-sound-length="1760">t [t]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="12652" data-sound-length="1961">j [t͡s]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="14791" data-sound-length="1915">c [t͡ɕ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="16929" data-sound-length="1907">k [k]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="19831" data-sound-length="1793">ø [ʔ]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <th scope="row">Asp.</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="23287" data-sound-length="1733">ph [pʰ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="25540" data-sound-length="1594">th [tʰ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="27703" data-sound-length="1761">q [t͡sʰ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="29820" data-sound-length="1629">ch [t͡ɕʰ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="32060" data-sound-length="1565">kh [kʰ]</button>
+                                    </td>
+
+                                    <td rowspan="2">&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <!-- EMPTY PLACEHOLDER -->
+                                    <th scope="row">Voiced</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="35110" data-sound-length="1732">b [b]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="37402" data-sound-length="1890">d [d]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="39802" data-sound-length="1789">z [d͡z]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="41872" data-sound-length="2074">zh [d͡ʑ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="44176" data-sound-length="1732">g [g]</button>
+                                    </td>
+
+                                    <!-- EMPTY PLACEHOLDER -->
+                                </tr>
+
+                                <tr>
+                                    <th scope="row" colspan="2">Fricative</th>
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <td colspan="2">&nbsp;</td>
+
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="46822" data-sound-length="2001">s [s]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="49049" data-sound-length="1900">x [ɕ]</button>
+                                    </td>
+
+                                    <td>&nbsp;</td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="51373" data-sound-length="1800">h [h]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row" colspan="2">Approximant</th>
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <td>&nbsp;</td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="53538" data-sound-length="1659">l [l]</button>
+                                    </td>
+
+                                    <td colspan="2">&nbsp;</td>
+
+                                    <!-- EMPTY PLACEHOLDER -->
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/consonants.mp3" data-sound-start="55578" data-sound-length="2094">w [w]</button>
+                                    </td>
+
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article>
+                        <h3>Final Consonants</h3>
+                        <p>Optional consonants that finish off a character.</p>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" aria-hidden="true">&nbsp;</th>
+
+                                    <th scope="col">Bilabial</th>
+                                    <th scope="col">Alveolar</th>
+                                    <th scope="col">Velar</th>
+                                    <th scope="col">Glottal</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Nasal</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="851" data-sound-length="1086">◌m [m]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="2048" data-sound-length="945">◌n [n]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="3166" data-sound-length="882">◌ng [ŋ]</button>
+                                    </td>
+
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Applosive</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="5938" data-sound-length="677">◌p [p̚]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="6962" data-sound-length="655">◌t [t̚]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="7967" data-sound-length="713">◌k [k̚]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="8992" data-sound-length="891">◌h [ʔ]</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article>
+                        <h3>Syllabic Consonants</h3>
+                        <p>Standalone consonants that form a character by their own and do not need a vowel.</p>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" aria-hidden="true">&nbsp;</th>
+
+                                    <th scope="col">Bilabial</th>
+                                    <th scope="col">Velar</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Nasal</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="11220" data-sound-length="980">m [m̩]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/ending-phonemes.mp3" data-sound-start="12333" data-sound-length="1070">ng [ŋ̍]</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+                </section>
+
+                <section>
+                    <h2>Vowels</h2>
+                    <p>The middle piece of a Hokkien character. Most characters start from one of these vowels.</p>
+
+                    <article>
+                        <h3>Monophthongs</h3>
+
+                        <svg viewBox="0 0 1000 700" width="500">
+                            <path d="M 100, 50 H 900 V 650 H 500 z M 500, 50 700, 650 M 233.333, 250 H 900 M 366.667, 450 H 900"></path>
+                        </svg>
+
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <button type="button" aria-label="Close Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="441" data-sound-length="1197">i [i]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Nasalised Close Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="1737" data-sound-length="1136">ñi [ĩ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Close Back Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="3141" data-sound-length="1024">ir [ɯ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Close Back Rounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="4277" data-sound-length="869">u [u]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Nasalised Close Back Rounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="5227" data-sound-length="1121">ñu [ũ]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <button type="button" aria-label="Close-Mid Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="7462" data-sound-length="958">e [e]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Nasalised Close-Mid Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="8576" data-sound-length="846">ñe [ẽ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Close-Mid Back Rounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="9556" data-sound-length="899">o [o]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <button type="button" aria-label="Mid Central Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="11540" data-sound-length="1119">er [ə]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <button type="button" aria-label="Open-Mid Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="13720" data-sound-length="1033">ae [ɛ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Open-Mid Back Rounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="14886" data-sound-length="869">or [ɔ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Nasalised Open-Mid Back Rounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="15889" data-sound-length="1069">ñor [ɔ̃]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <button type="button" aria-label="Open Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="18502" data-sound-length="1091">a [a]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" aria-label="Nasalised Open Front Unrounded Vowel" data-sound-src="audio/vowels.mp3" data-sound-start="19727" data-sound-length="936">ña [ã]</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article>
+                        <h3>Diphthongs</h3>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" aria-hidden="true">&nbsp;</th>
+
+                                    <th scope="col">a-</th>
+                                    <th scope="col">i-</th>
+                                    <th scope="col">u-</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th scope="row">-a</th>
+
+                                    <td rowspan="2">&nbsp;</td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="24062" data-sound-length="881">ia [ia]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="28110" data-sound-length="867"><sup>*</sup>ua [ua]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">-e</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="25074" data-sound-length="936">ie [iɛ]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="29074" data-sound-length="795"><sup>*</sup>ue [ue]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">-i</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="21932" data-sound-length="934">ai [ai]</button>
+                                    </td>
+
+                                    <td>&nbsp;</td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="30035" data-sound-length="1017"><sup>*</sup>ui [ui]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">-o</th>
+
+                                    <td>&nbsp;</td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="26142" data-sound-length="834">io [io]</button>
+                                    </td>
+
+                                    <td rowspan="2">&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">-u</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="23021" data-sound-length="958">au [au]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="27165" data-sound-length="835">iu [iu]</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article>
+                        <h3>Triphthongs</h3>
+
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="32541" data-sound-length="1020">iau [iau]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/vowels.mp3" data-sound-start="33641" data-sound-length="1019"><sup>*</sup>uai [uai]</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <p><small><sup>*</sup> In cases where the character starts with the vowel "u", the "u" will usually be pronounced and shown up as "w".</small></p>
+                </section>
+
+                <section>
+                    <h2>Tones</h2>
+                    <p>Tone are what makes each character unique and stand out.</p>
+
+                    <article>
+                        <h3>List of Tones</h3>
+                        <p>Each tone has a regular (R) tone and a sandhied (S) (more on that later), represented as [RR, SS].</p>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col" aria-hidden="true">&nbsp;</th>
+
+                                    <th scope="col">Level (平)</th>
+                                    <th scope="col">Rising (上)</th>
+                                    <th scope="col">Departing (去)</th>
+                                    <th scope="col">Entering (入)</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th scope="col">Dark (阴)</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="446" data-sound-length="2001">ā (1, 6) [44, 22]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="2559" data-sound-length="1892">à (2, 5) [42, 24]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="4676" data-sound-length="2060">ǎ (3, 2) [21, 42]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="6849" data-sound-length="1948">a◌ (4, 2) [32, 42]</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">Light (阳)</th>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="10455" data-sound-length="1975">á (5, 3) [24, 21]</button>
+                                    </td>
+
+                                    <td>&nbsp;</td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="12505" data-sound-length="2023">á (6, 3) [22, 21]</button>
+                                    </td>
+
+                                    <td>
+                                        <button type="button" data-sound-src="audio/tones.mp3" data-sound-start="14753" data-sound-length="2248">ā◌ (7, 4) [43, 32]</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <article>
+                        <h3>Sandhied Tones</h3>
+
+                        <p>Sandhied tones are a set of tones which every Hokkien character has and differs from its regular tone. When the character will change to its sandhied tone is dependent on its position in a compound word or a sentence, as well as its relationship with other characters.</p>
+
+                        <p>The most common occurrence of a character pronounced using its sandhied tone is in compound words, where the first character will go through sandhi and be pronounced with a different tone than its regular tone.</p>
+                        <p>This is similar to how in Mandarin, if both characters in a compound word have the 3rd tone (◌̌), the first character will be pronounced with the 2nd tone (◌́), while the second character will be pronounced as-is. [like in 你好 (nǐ hǎo) → (ní hǎo)]</p>
+                    </article>
+                </section>
+            </div>
+
+            <div data-page-id="vocabulary-list">
+                <h1>Vocabulary List</h1>
+                <p>Here is the list of basic words and topics that you can learn:</p>
+
+                <section>
+                    <h2>List of Topics</h2>
+
+                    <ul id="list-of-topics"></ul>
+                </section>
+
+                <section>
+                    <h2>Topic Card</h2>
+
+                    <div id="topic-card">
+                        <p>Click on a topic button to see the topic's phrases and description</p>
+
+                        <div></div>
+                    </div>
+                </section>
+            </div>
+
+            <div data-page-id="minigame">
+                <h1>Drag-and-Drop Minigame</h1>
+                <p>Drag question boxes from the top to its matching meaning boxes at the bottom as you race against the timer.</p>
+
+                <div id="game-bounds">
+                    <section>
+                        <h2>Game Settings</h2>
+
+                        <form>
+                            <div>
+                                <fieldset>
+                                    <legend>Topics</legend>
+                                </fieldset>
+
+                                <fieldset>
+                                    <legend>Time Limit</legend>
+
+                                    <div>
+                                        <label for="time-minutes">Minutes</label>
+                                        :
+                                        <label for="time-seconds">Seconds</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="number" id="time-minutes" name="time-minutes" dir="rtl" value="3" placeholder="3" min="0">
+                                        :
+                                        <input type="number" id="time-seconds" name="time-seconds" value="00" placeholder="00" min="-1" max="60"> <!-- boundaries offset by one to allow -->
+                                    </div>
+                                </fieldset>
+
+                                <fieldset>
+                                    <legend>Difficulty</legend>
+
+                                    <div>
+                                        <input type="radio" id="difficulty-easy" name="difficulty" value="EASY" checked>
+                                        <label for="difficulty-easy">Easy</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" id="difficulty-medium" name="difficulty" value="MEDIUM">
+                                        <label for="difficulty-medium">Medium</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="radio" id="difficulty-hard" name="difficulty" value="HARD">
+                                        <label for="difficulty-hard">Hard</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <button type="submit">Start Game</button>
+                        </form>
+                    </section>
+
+                    <div></div>
+                    <hr>
+                    <div></div>
+
+                    <div>
+                        <p>
+                            <span id="game-score"></span>
+                            <span id="game-timer"></span>
+                        </p>
+
+                        <p id="game-countdown"></p>
+                    </div>
+
+                    <section>
+                        <div>
+                            <h2>Game Over!</h2>
+                            <p id="game-final-score"></p>
+                        </div>
+
+                        <button type="button">Restart Game</button>
+                    </section>
+                </div>
+            </div>
+
+            <footer>
+                <figure>
+                    <img src="images/qr-code.png" alt="QR code to see on the phone" title="QR code to see on the phone" width="120">
+                    <figcaption>Scan the QR code to view it on your phone</figcaption>
+                </figure>
+
+                <button id="to-top-btn" type="button">↑ Go to Top</button>
+            </footer>
+        </main>
+
+        <footer>
+            <!-- Copyright © 2025 Isabella Ang (https://sethlui.com/618-hokkien-mee-singapore) -->
+            <img src="images/hokkien-mee.webp" alt="Hokkien Mee" title="Rotate the plate!" width="1200" draggable="false">
+        </footer>
+
+        <!-- will only show up if JavaScript is disabled -->
+        <noscript>
+            <h1>Oh No! JavaScript Is Disabled!</h1>
+            <p>This site requires JavaScript to work properly. Please enable it or use a browser that supports JavaScript</p>
+        </noscript>
+    </body>
+</html>

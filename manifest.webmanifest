@@ -1,0 +1,21 @@
+{
+    "name": "🇸🇬 Singaporean Hokkien Guide",
+    "short_name": "sg-hok-guide",
+
+    "start_url": "index.html",
+    "display": "standalone",
+
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64",
+            "type": "image/x-icon"
+        },
+
+        {
+            "src": "favicon.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        }
+    ]
+}
