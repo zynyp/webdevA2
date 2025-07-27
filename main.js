@@ -1334,7 +1334,7 @@ function openHeader() {
             const prevRotation = parseFloat(footerImg.style.rotate);
             footerImg.style.rotate = `${prevRotation + Math.floor(rotationSpeed * 1000) / 1000}deg`;
 
-            rotationSpeed *= 0.96;
+            rotationSpeed *= 0.97;
         });
     }, { once: true }); // only listen to any transitionend event once before it stops listening
 }
