@@ -542,6 +542,8 @@ main > div[data-page-id="vocabulary-list"] > section {
     margin-top: 1.2rem;
 }
 
+main > div[data-page-id="vocabulary-list"] > section:nth-of-type(2) { display: none; }
+
 #list-of-topics {
     display: flex;
 

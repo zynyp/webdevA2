@@ -942,6 +942,7 @@ for (const { id, name } of TOPICS) {
 const listOfTopicsBtns = listOfTopics.querySelectorAll("& button");
 
 const topicCard = document.getElementById("topic-card");
+const topicCardSection = topicCard.parentElement;
 
 const topicCardDesc = topicCard.querySelector("& > p");
 const topicCardPhrases = topicCard.querySelector("& > div");
@@ -1050,60 +1051,22 @@ for (const table of pronunciationGuideTables) {
 
 listOfTopics.addEventListener("click", ({ target }) => {
     if (!(target instanceof HTMLButtonElement)) return;
+    const { topicId } = target.dataset;
 
     for (const btn of listOfTopicsBtns) {
         btn.style.filter = "";
         btn.style.scale = "";
     }
 
+    if (topicId === topicCard.dataset.currentTopic) {
+        closeTopicCard();
+        return;
+    }
+
     target.style.filter = "brightness(150%)";
     target.style.scale = "105%";
 
-    const {
-        desc: topicDesc,
-        words: topicWords
-    } = TOPICS.find(({ id }) => id === target.dataset.topicId);
-
-    topicCardDesc.textContent = topicDesc;
-
-    topicCardPhrases.replaceChildren([]);
-    for (const word of topicWords) {
-        const {
-            romanisation,
-            meaning
-        } = WORDS[word];
-
-        const article = document.createElement("article");
-
-        const heading = document.createElement("h3");
-        const ruby = document.createElement("ruby"); // ruby elements allow us to easily romanisations of Chinese characters
-
-        const rubyChar = document.createTextNode(word);
-        const rubyFallbackStart = document.createElement("rp"); // used to separate ruby text from the main text if the browser does not support properly rendered ruby text
-        rubyFallbackStart.textContent = " (";
-
-        const rubyText = document.createElement("rt");
-        rubyText.textContent = romanisation;
-
-        const rubyFallbackEnd = document.createElement("rp");
-        rubyFallbackEnd.textContent = ") ";
-
-        ruby.appendChild(rubyChar);
-
-        ruby.appendChild(rubyFallbackStart);
-        ruby.appendChild(rubyText);
-        ruby.appendChild(rubyFallbackEnd);
-
-        heading.appendChild(ruby);
-
-        const desc = document.createElement("p");
-        desc.textContent = meaning;
-
-        article.appendChild(heading);
-        article.appendChild(desc);
-
-        topicCardPhrases.appendChild(article);
-    }
+    openTopicCard(topicId);
 });
 
 /* -------------------------------- MINIGAME -------------------------------- */
@@ -1424,6 +1387,62 @@ function closeHeader() {
         clearInterval(footerImgIntervalId);
         footerImgIntervalId = null;
     }
+}
+
+function openTopicCard(topicId) {
+    const {
+        desc: topicDesc,
+        words: topicWords
+    } = TOPICS.find(({ id }) => id === topicId);
+
+    topicCard.dataset.currentTopic = topicId;
+    topicCardSection.style.display = "block";
+
+    topicCardDesc.textContent = topicDesc;
+
+    topicCardPhrases.replaceChildren([]);
+    for (const word of topicWords) {
+        const {
+            romanisation,
+            meaning
+        } = WORDS[word];
+
+        const article = document.createElement("article");
+
+        const heading = document.createElement("h3");
+        const ruby = document.createElement("ruby"); // ruby elements allow us to easily romanisations of Chinese characters
+
+        const rubyChar = document.createTextNode(word);
+        const rubyFallbackStart = document.createElement("rp"); // used to separate ruby text from the main text if the browser does not support properly rendered ruby text
+        rubyFallbackStart.textContent = " (";
+
+        const rubyText = document.createElement("rt");
+        rubyText.textContent = romanisation;
+
+        const rubyFallbackEnd = document.createElement("rp");
+        rubyFallbackEnd.textContent = ") ";
+
+        ruby.appendChild(rubyChar);
+
+        ruby.appendChild(rubyFallbackStart);
+        ruby.appendChild(rubyText);
+        ruby.appendChild(rubyFallbackEnd);
+
+        heading.appendChild(ruby);
+
+        const desc = document.createElement("p");
+        desc.textContent = meaning;
+
+        article.appendChild(heading);
+        article.appendChild(desc);
+
+        topicCardPhrases.appendChild(article);
+    }
+}
+
+function closeTopicCard() {
+    topicCard.dataset.currentTopic = "";
+    topicCardSection.style.display = "none";
 }
 
 function startGame({ topics, timeLimitSecs, difficulty }) {
