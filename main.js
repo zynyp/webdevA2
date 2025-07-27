@@ -216,7 +216,7 @@ const WORDS = {
     },
 
     "佗个": {
-        romanisation: "tò",
+        romanisation: "tò-é",
         meaning: "which"
     },
 
