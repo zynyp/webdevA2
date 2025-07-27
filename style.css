@@ -743,6 +743,7 @@ main > footer img {
 
 #game-bounds > section {
     box-sizing: border-box;
+    overflow: auto;
     position: absolute;
     left: 0;
 
