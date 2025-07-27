@@ -883,6 +883,12 @@ let footerImgIntervalId = null;
 let gameAborter = null;
 
 /** @type {number | null} */
+let gameStartingTimeoutId = null;
+
+/** @type {number | null} */
+let gameCountdownIntervalId = null;
+
+/** @type {number | null} */
 let gameAnswersIntervalId = null;
 
 /** @type {number | null} */
@@ -897,6 +903,8 @@ matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", ({ mat
 /* -------------------------------------------------------------------------- */
 /*                                  ELEMENTS                                  */
 /* -------------------------------------------------------------------------- */
+
+/* --------------------------------- HEADER --------------------------------- */
 
 const header = document.querySelector("body > header");
 const [headerTitleContainer, headerNavContainer, closedHeaderBar] = header.querySelectorAll("& > div"); // "const [] = " destructs an "array-like" object (objects with *[Symbol.iterator]() generator function (functions that start with a "*") which return values in a sequential order each time it is run), which allows you to easily assign multiple variables to each value of the object. "&" means the current element that is queried from
@@ -951,7 +959,9 @@ const gameTitle = mainElt.querySelector("& > div[data-page-id=\"minigame\"] > h1
 const gameDesc = mainElt.querySelector("& > div[data-page-id=\"minigame\"] > p");
 
 const [gameAnswers, gameQuestions, gameUI] = gameBounds.querySelectorAll("& > div");
-const [gameSettingsSection, gameEndSection] = gameBounds.querySelectorAll("& > section");
+const gameOverlayScreens = [...gameBounds.querySelectorAll("& > section")];
+
+const [gameSettingsSection, gameEndSection] = gameOverlayScreens;
 
 const gameSettingsForm = gameSettingsSection.querySelector("& > form");
 const gameSettingsTopics = gameSettingsForm.querySelector("& > div > fieldset:nth-child(1)");
@@ -997,6 +1007,22 @@ headerNavContainer.addEventListener("click", ({ target }) => {
 resetSiteBtn.addEventListener("click", () => {
     closePage();
     openHeader();
+
+    unhighlightTopicBtns();
+    closeTopicCard();
+
+    if (hasGameStarted) endGameLoop();
+    if (gameStartingTimeoutId !== null) {
+        clearTimeout(gameStartingTimeoutId);
+        gameStartingTimeoutId = null;
+    }
+
+    if (gameCountdownIntervalId !== null) {
+        clearTimeout(gameCountdownIntervalId);
+        gameCountdownIntervalId = null;
+    }
+
+    showGameOverlayScreen("settings");
 });
 
 toggleFullscreenBtn.addEventListener("click", () => document.fullscreenElement === document.documentElement ? document.exitFullscreen?.() : document.documentElement.requestFullscreen?.());
@@ -1012,7 +1038,7 @@ openHeaderBtn.addEventListener("click", () => {
 
 toTopBtn.addEventListener("click", () => mainElt.scrollTo({
     top: 0,
-    behaviour: "smooth"
+    behavior: "smooth"
 }));
 
 /* --------------------------- PRONUNCIATION GUIDE -------------------------- */
@@ -1040,7 +1066,7 @@ for (const table of pronunciationGuideTables) {
             await audio.play();
         }, { once: true });
 
-        audio.addEventListener("playing", () => setTimeout(audio.pause.bind(audio), +soundLength), { once: true });
+        audio.addEventListener("playing", () => setTimeout(() => audio.pause(), +soundLength), { once: true });
     });
 }
 
@@ -1050,10 +1076,7 @@ listOfTopics.addEventListener("click", ({ target }) => {
     if (!(target instanceof HTMLButtonElement)) return;
     const { topicId } = target.dataset;
 
-    for (const btn of listOfTopicsBtns) {
-        btn.style.filter = "";
-        btn.style.scale = "";
-    }
+    unhighlightTopicBtns();
 
     if (topicId === topicCard.dataset.currentTopic) {
         closeTopicCard();
@@ -1100,69 +1123,34 @@ gameSettingsForm.addEventListener("submit", (evt) => {
     for (const { id } of TOPICS) data.get(`topic-${id}`) === "on" && topics.push(id);
 
     const timeLimitMinutes = +data.get("time-minutes");
-    const timeLimitSeconds = +data.get("time-seconds");
+    const timeLimitSecs = +data.get("time-seconds");
 
     const difficulty = data.get("difficulty");
 
-    const gameSettingsSectionAborter = new AbortController();
-
-    gameSettingsSection.style.top = "-100%";
-    gameSettingsSection.addEventListener("transitionend", ({ target }) => {
-        if (target !== gameSettingsSection || gameSettingsSection.style.top !== "-100%") return;
-
-        gameSettingsSection.style.display = "none";
-        gameSettingsSectionAborter.abort();
-    }, { signal: gameSettingsSectionAborter.signal });
-
-    gameAnswers.style.display = "block";
-    gameQuestions.style.display = "flex";
-    gameUI.style.display = "block";
-
+    // remove all the boxes before starting the game
     gameAnswers.replaceChildren([]);
     gameQuestions.replaceChildren([]);
 
-    gameScore.textContent = "Score: 0";
-    gameTimer.textContent = `Time Left: ${data.get("time-minutes")}:${data.get("time-seconds").padStart(2, "0")}`
+    hideGameHeader();
+    hideGameOverlayScreen("settings", () => {
+        const secondsBeforeStart = 3;
 
-    const gameCountdownAborter = new AbortController();
+        showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs);
+        if (gameStartingTimeoutId === null) gameStartingTimeoutId = setTimeout(startGameLoop.bind(startGameLoop, { topics, totalTimeLimit: timeLimitMinutes * 60 + timeLimitSecs, difficulty, onGameEnd }), secondsBeforeStart * 1000); // .bind is a short-form of () => funcName(...params)
+    });
 
-    gameCountdown.textContent = "4";
-    gameCountdown.style.transitionProperty = "none";
-    gameCountdown.style.scale = "0%";
+    function onGameEnd(finalScore) {
+        showEndGameUI();
 
-    const gameCountdownIntervalId = setInterval(() => {
-        gameCountdown.style.transitionProperty = "none";
-        gameCountdown.style.scale = "100%";
+        setTimeout(() => {
+            showGameOverlayScreen("game-over");
 
-        const numOfSecsLeft = +gameCountdown.textContent;
-        gameCountdown.textContent = `${numOfSecsLeft - 1 || "GO!"}`;
+            gameFinalScore.textContent = `Your Final Score is: ${finalScore}!`;
+            gameRestartBtn.addEventListener("click", showGameOverlayScreen.bind(showGameOverlayScreen, "settings", hideGameOverlayScreen.bind(hideGameOverlayScreen, "game-over", () => {})), { once: true });
 
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-            gameCountdown.style.transitionProperty = "scale";
-            gameCountdown.style.scale = "0%";
-        }));
-    }, 1000);
-
-    gameCountdown.addEventListener("transitionend", () => {
-        if (gameCountdown.textContent !== "GO!") return;
-
-        gameCountdown.style.display = "none";
-
-        startGame({ topics, timeLimitSecs: timeLimitMinutes * 60 + timeLimitSeconds, difficulty });
-
-        gameCountdownAborter.abort();
-        clearInterval(gameCountdownIntervalId);
-    }, { signal: gameCountdownAborter.signal });
-
-    gameTitle.style.marginBlockStart = "0rem";
-    gameTitle.style.marginBlockEnd = "0rem";
-    gameTitle.style.fontSize = "0rem";
-    gameTitle.addEventListener("transitionend", () => gameTitle.style.display = "none", { once: true });
-
-    gameDesc.style.marginBlockStart = "0rem";
-    gameDesc.style.marginBlockEnd = "0rem";
-    gameDesc.style.fontSize = "0rem";
-    gameDesc.addEventListener("transitionend", () => gameDesc.style.display = "none", { once: true });
+            gameStartingTimeoutId = null;
+        }, 2400);
+    }
 });
 
 for (const { id, name } of TOPICS) {
@@ -1216,6 +1204,8 @@ gameTimeLimitSecondsOption.addEventListener("input", () => {
 /*                               PAGE FUNCTIONS                               */
 /* -------------------------------------------------------------------------- */
 
+/* --------------------------------- GENERAL -------------------------------- */
+
 function openPage(pageId) {
     mainElt.scrollTo({
         top: 0,
@@ -1254,6 +1244,8 @@ function closePage() {
         mainEltAborter.abort();
     }, { signal: mainEltAborter.signal });
 }
+
+/* --------------------------------- HEADER --------------------------------- */
 
 function openHeader() {
     if (isHeaderOpen) return;
@@ -1385,6 +1377,8 @@ function closeHeader() {
     }
 }
 
+/* ------------------------------- TOPIC CARD ------------------------------- */
+
 function openTopicCard(topicId) {
     const {
         desc: topicDesc,
@@ -1441,7 +1435,16 @@ function closeTopicCard() {
     topicCardSection.style.display = "none";
 }
 
-function startGame({ topics, timeLimitSecs, difficulty }) {
+function unhighlightTopicBtns() {
+    for (const btn of listOfTopicsBtns) {
+        btn.style.filter = "";
+        btn.style.scale = "";
+    }
+}
+
+/* -------------------------------- MINIGAME -------------------------------- */
+
+function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {} }) {
     if (hasGameStarted) return;
 
     hasGameStarted = true;
@@ -1653,6 +1656,8 @@ function startGame({ topics, timeLimitSecs, difficulty }) {
         default: {
             timeoutLength = 2400;
             minTimeoutLength = 1600;
+
+            startingNumOfPairs = 6;
         }
     }
 
@@ -1663,10 +1668,13 @@ function startGame({ topics, timeLimitSecs, difficulty }) {
     }
 
     gameTimerIntervalId = setInterval(() => {
-        timeLimitSecs--;
-        gameTimer.textContent = `Time Left: ${Math.floor(timeLimitSecs / 60)}:${`${timeLimitSecs % 60}`.padStart(2, "0")}`;
+        totalTimeLimit--;
+        gameTimer.textContent = `Time Left: ${Math.floor(totalTimeLimit / 60)}:${`${totalTimeLimit % 60}`.padStart(2, "0")}`;
 
-        if (timeLimitSecs <= 0) endGame(score);
+        if (totalTimeLimit <= 0) {
+            endGameLoop();
+            onGameEnd(score);
+        }
     }, 1000);
 
     function addPair() {
@@ -1679,7 +1687,7 @@ function startGame({ topics, timeLimitSecs, difficulty }) {
     }
 }
 
-function endGame(finalScore) {
+function endGameLoop() {
     if (!hasGameStarted) return;
     hasGameStarted = false;
 
@@ -1689,61 +1697,124 @@ function endGame(finalScore) {
     if (gameAnswersIntervalId !== null) clearInterval(gameAnswersIntervalId);
     if (gameTimeoutTimeoutId !== null) clearInterval(gameTimeoutTimeoutId);
     if (gameTimerIntervalId !== null) clearInterval(gameTimerIntervalId);
+}
 
+function showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs) {
+    gameScore.textContent = "Score: 0";
+    gameTimer.textContent = `Time Left: ${timeLimitMinutes}:${`${timeLimitSecs}`.padStart(2, "0")}`
+
+    const gameCountdownAborter = new AbortController();
+
+    gameCountdown.textContent = `${secondsBeforeStart + 1}`;
+    gameCountdown.style.display = "block";
+    gameCountdown.style.transitionProperty = "none";
+    gameCountdown.style.scale = "0%";
+
+    showNextCountdownStage();
+    if (gameCountdownIntervalId === null) gameCountdownIntervalId = setInterval(showNextCountdownStage, 1000);
+
+    gameCountdown.addEventListener("transitionend", () => {
+        if (gameCountdown.textContent !== "GO!") return;
+        gameCountdown.style.display = "none";
+
+        gameCountdownAborter.abort();
+
+        clearInterval(gameCountdownIntervalId);
+        gameCountdownIntervalId = null;
+    }, { signal: gameCountdownAborter.signal });
+
+    function showNextCountdownStage() {
+        gameCountdown.style.transitionProperty = "none";
+        gameCountdown.style.scale = "100%";
+
+        const numOfSecsLeft = +gameCountdown.textContent;
+        gameCountdown.textContent = `${numOfSecsLeft - 1 || "GO!"}`;
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            gameCountdown.style.transitionProperty = "scale";
+            gameCountdown.style.scale = "0%";
+        }));
+    }
+}
+
+function showEndGameUI() {
     gameCountdown.style.display = "block";
     gameCountdown.style.fontSize = "3.6rem";
 
     requestAnimationFrame(() => requestAnimationFrame(() => gameCountdown.style.scale = "100%"));
 
     gameCountdown.textContent = "TIME'S UP!";
+}
 
-    setTimeout(() => {
-        gameTitle.style.display = "block";
-        gameDesc.style.display = "block";
+function showGameHeader() {
+    gameTitle.style.display = "block";
+    gameDesc.style.display = "block";
 
-        requestAnimationFrame(() => {
-            gameTitle.style.marginBlockStart = "0.6rem";
-            gameTitle.style.marginBlockEnd = "0.8rem";
+    requestAnimationFrame(() => {
+        gameTitle.style.marginBlockStart = "0.6rem";
+        gameTitle.style.marginBlockEnd = "0.8rem";
 
-            gameTitle.style.fontSize = "2.4rem";
+        gameTitle.style.fontSize = "2.4rem";
 
-            gameDesc.style.marginBlockStart = "0.2rem";
-            gameDesc.style.marginBlockEnd = "1.6rem";
+        gameDesc.style.marginBlockStart = "0.2rem";
+        gameDesc.style.marginBlockEnd = "1.6rem";
 
-            gameDesc.style.fontSize = "1rem";
-        });
+        gameDesc.style.fontSize = "1rem";
+    });
+}
 
-        gameEndSection.style.display = "flex";
-        requestAnimationFrame(() => requestAnimationFrame(() => gameEndSection.style.top = "0%"));
+function hideGameHeader() {
+    gameTitle.style.marginBlockStart = "0rem";
+    gameTitle.style.marginBlockEnd = "0rem";
+    gameTitle.style.fontSize = "0rem";
+    gameTitle.addEventListener("transitionend", () => gameTitle.style.display = "none", { once: true });
 
-        const gameEndSectionAborter = new AbortController();
-        gameEndSection.addEventListener("transitionend", ({ target }) => {
-            if (target !== gameEndSection || gameEndSection.style.display !== "flex") return;
+    gameDesc.style.marginBlockStart = "0rem";
+    gameDesc.style.marginBlockEnd = "0rem";
+    gameDesc.style.fontSize = "0rem";
+    gameDesc.addEventListener("transitionend", () => gameDesc.style.display = "none", { once: true });
+}
 
-            gameAnswers.style.display = "none";
-            gameQuestions.style.display = "none";
-            gameUI.style.display = "none";
+function showGameOverlayScreen(id, onFinishShow = () => {}) {
+    const overlayScreen = gameOverlayScreens.find(({ dataset: { screenId } }) => id === screenId);
 
-            gameEndSectionAborter.abort();
-        }, { signal: gameEndSectionAborter.signal });
+    overlayScreen.style.display = id === "game-over" ? "flex" : "block";
+    requestAnimationFrame(() => requestAnimationFrame(() => overlayScreen.style.top = "0%"));
 
-        gameFinalScore.textContent = `Your Final Score is: ${finalScore}!`;
-        gameRestartBtn.addEventListener("click", () => {
-            gameSettingsSection.style.display = "block";
-            requestAnimationFrame(() => gameSettingsSection.style.top = "0%");
+    const overlayScreenAborter = new AbortController();
+    overlayScreen.addEventListener("transitionend", ({ target }) => {
+        if (target !== overlayScreen || (overlayScreen.style.display !== "flex" && overlayScreen.style.display !== "block")) return;
 
-            const gameSettingsSectionAborter = new AbortController();
-            gameSettingsSection.addEventListener("transitionend", ({ target }) => {
-                if (target !== gameSettingsSection || gameSettingsSection.style.display !== "block") return;
+        gameAnswers.style.display = "none";
+        gameQuestions.style.display = "none";
+        gameUI.style.display = "none";
 
-                gameSettingsSectionAborter.abort();
+        onFinishShow();
 
-                gameEndSection.style.display = "none";
-                gameEndSection.style.top = "-100%";
+        overlayScreenAborter.abort();
+    }, { signal: overlayScreenAborter.signal });
+}
 
-            }, { signal: gameSettingsSectionAborter.signal });
-        }, { once: true });
-    }, 2400);
+function hideGameOverlayScreen(id, onFinishHide = () => {}) {
+    const overlayScreen = gameOverlayScreens.find(({ dataset: { screenId } }) => id === screenId);
+    overlayScreen.style.top = "-100%";
+
+    const overlayScreenAborter = new AbortController();
+
+    overlayScreen.addEventListener("transitionend", ({ target }) => {
+        if (target !== overlayScreen || overlayScreen.style.top !== "-100%") return;
+
+        overlayScreen.style.display = "none";
+        overlayScreenAborter.abort();
+
+        onFinishHide();
+
+        if (gameOverlayScreens.some(({ style: { display } }) => display !== "none" && display !== "")) return;
+
+        gameAnswers.style.display = "block";
+        gameQuestions.style.display = "flex";
+        gameUI.style.display = "block";
+    }, { signal: overlayScreenAborter.signal });
 }
 
 function addGameBoxPair(answer) {
