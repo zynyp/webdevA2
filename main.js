@@ -1272,7 +1272,9 @@ function openHeader() {
         closedHeaderBtnsIntervalId = null;
     }
 
-    footer.style.bottom = "-44%";
+    footer.style.display = "block";
+    requestAnimationFrame(() => footer.style.bottom = "-44%");
+
     footer.addEventListener("transitionend", () => {
         footerImgEventAborter = new AbortController(); // abort controllers allows us to remove event listeners all at once without needing to reference the callback functions themselves
 
@@ -1332,12 +1334,11 @@ function closeHeader() {
 
     header.style.translate = "0% -100%";
 
-    const closedHeaderBarAborter = new AbortController();
-
     closedHeaderBar.style.display = "flex";
     closedHeaderBar.style.transitionDelay = "400ms";
     requestAnimationFrame(() => closedHeaderBar.style.top = "100%");
 
+    const closedHeaderBarAborter = new AbortController();
     closedHeaderBar.addEventListener("transitionend", ({ target }) => {
         if (target !== closedHeaderBar || header.style.translate !== "0% -100%") return;
 
@@ -1369,6 +1370,14 @@ function closeHeader() {
     }, 8);
 
     footer.style.bottom = "-100%";
+
+    const footerAborter = new AbortController();
+    footer.addEventListener("transitionend", ({ target }) => {
+        if (target !== footer || footer.style.bottom !== "-100%") return;
+        footer.style.display = "none";
+
+        footerAborter.abort();
+    }, { signal: footerAborter.signal });
 
     footerImgEventAborter?.abort(); // "?." means that if footerImgEventAborter is not nullish (!== null), then run the "abort" method
     if (footerImgIntervalId !== null) {
