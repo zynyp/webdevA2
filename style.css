@@ -162,12 +162,10 @@ figure > figcaption > a { padding-inline-start: 0.6rem; }
 svg {
     width: 100%;
 
-    fill: transparent;
+    fill: var(--theme-text);
+    stroke: none;
 
-    stroke: var(--theme-text);
-    stroke-width: 4px;
-
-    transition-property: stroke;
+    transition-property: fill, stroke;
     transition-duration: 1600ms;
 }
 
@@ -487,13 +485,13 @@ main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > articl
 
     border-width: 0px;
     border-style: none;
+
+    translate: -50%;
 }
 
 main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table button {
-    padding-inline: 0.3rem;
-    padding-block: 0.2rem;
-
-    width: fit-content;
+    width: 2.4rem;
+    height: 1.4rem;
 
     background-color: var(--theme-btn);
 
@@ -503,31 +501,40 @@ main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > articl
     transition-duration: 1600ms;
 }
 
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td { top: 15px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(1) { left: 0px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(2) { left: 32px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(3) { left: 224px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(4) { left: 270px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(5) { left: 312px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td { top: min(max(12px, 4dvw), 30px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(1) { left: calc(min(max(24px, 8dvw), 60px) - 1.3rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(2) { left: calc(min(max(24px, 8dvw), 60px) + 1.3rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(3) { left: calc(min(max(216px, 72dvw), 540px) - 2.6rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(4) { left: min(max(216px, 72dvw), 540px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(1) > td:nth-child(5) { left: calc(min(max(216px, 72dvw), 540px) + 2.6rem); }
 
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td { top: 80px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(1) { left: 36px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(2) { left: 78px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(3) { left: 270px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td { top: min(max(60px, 20dvw), 150px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(1) { left: calc(min(max(56px, 18.7dvw), 140px) - 1.3rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(2) { left: calc(min(max(56px, 18.7dvw), 140px) + 1.3rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(2) > td:nth-child(3) { left: min(max(216px, 72dvw), 540px); }
 
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(3) > td { top: 115px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(3) > td:nth-child(1) { left: 170px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(3) > td { top: min(max(84px, 28dvw), 210px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(3) > td:nth-child(1) { left: min(max(144px, 48dvw), 360px); }
 
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td { top: 145px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(1) { left: 96px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(2) { left: 244px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(3) { left: 290px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td { top: min(max(108px, 36dvw), 270px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(1) { left: min(max(88px, 29.4dvw), 220px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(2) { left: calc(min(max(216px, 72dvw), 540px) - 1.3rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(4) > td:nth-child(3) { left: calc(min(max(216px, 72dvw), 540px) + 1.3rem); }
 
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td { top: 210px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td:nth-child(1) { left: 122px; }
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td:nth-child(2) { left: 160px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td { top: min(max(156px, 52dvw), 390px); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td:nth-child(1) { left: calc(min(max(120px, 40dvw), 300px) - 1.3rem); }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > table > tbody > tr:nth-child(5) > td:nth-child(2) { left: calc(min(max(120px, 40dvw), 300px) + 1.3rem); }
 
-main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > svg { width: 320px; }
+main > div[data-page-id="pronunciation-guide"] > section:nth-of-type(2) > article:nth-of-type(1) > svg {
+    width: 80dvw;
+    min-width: 240px;
+    max-width: 600px;
+
+    fill: none;
+
+    stroke: var(--theme-text);
+    stroke-width: min(max(6px, 0.48dvw), 15px);
+}
 
 main > div[data-page-id="vocabulary-list"] > section {
     gap: 0.2rem;
