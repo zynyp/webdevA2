@@ -219,6 +219,8 @@ body > header > div:nth-child(1) {
 }
 
 body > header > div:nth-child(1) > h1 {
+    margin-inline: 0.4rem;
+
     font-family: var(--font-title);
     font-size: min(max(2rem, 10dvw), 5rem);
     text-transform: uppercase;
@@ -829,6 +831,7 @@ main > footer img {
     justify-content: space-between;
     align-items: center;
 
+    width: 100%;
     height: calc(100% - 1.4rem - 0.6rem * 2 - 12px);
 }
 
