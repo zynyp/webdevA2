@@ -205,11 +205,6 @@ const WORDS = {
         meaning: "take, pick up"
     },
 
-    "什么": {
-        romanisation: "sìm-mih",
-        meaning: "what"
-    },
-
     "佗落": {
         romanisation: "tò-lōh",
         meaning: "where"
@@ -801,7 +796,7 @@ const TOPICS = [
         name: "Questions",
         desc: "Ask questions and how to clarify doubts",
 
-        words: ["什么", "佗落", "佗个", "按怎", "什物"]
+        words: ["佗落", "佗个", "按怎", "什物"]
     },
 
     {
