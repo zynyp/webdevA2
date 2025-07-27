@@ -384,6 +384,38 @@ body > header > div:nth-child(3) > div {
 
 @media (prefers-color-scheme: dark) { body > header > div:nth-child(3) button { background-image: url("images/icon-atlas-dark.png"); } }
 
+body > footer {
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    bottom: -100%;
+
+    transition-property: bottom;
+    transition-duration: 1200ms;
+
+    translate: -50%;
+}
+
+body > footer > img {
+    width: calc(100dvw - 12px);
+    max-width: 600px;
+
+    background-image: radial-gradient(closest-side, var(--theme-shadow) 60%, transparent); /* format of radial-gradient: <target> (the end target of the gradient; where the gradient will stop from the centre), <starting-color> <starting-position> (where the starting point of the colours start to transition from the centre outwards), <ending-color> */
+
+    border-radius: 100%;
+
+    transition-property: background-image, rotate;
+    transition-duration: 1200ms;
+
+    rotate: -30deg;
+
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body > footer > img:active { cursor: grabbing; }
+
 main {
     display: none;
     overflow: auto;
@@ -941,33 +973,6 @@ main > footer img {
 
     translate: -50% -50%;
 }
-
-body > footer > img {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-
-    padding: 36px;
-
-    width: calc(100% - 12px);
-    max-width: 600px;
-
-    background-image: radial-gradient(closest-side, var(--theme-shadow) 60%, transparent); /* format of radial-gradient: <target> (the end target of the gradient; where the gradient will stop from the centre), <starting-color> <starting-position> (where the starting point of the colours start to transition from the centre outwards), <ending-color> */
-
-    border-radius: 100%;
-
-    transition-property: background-image, rotate, translate;
-    transition-duration: 1200ms;
-
-    rotate: -30deg;
-    translate: -50% 100%;
-
-    cursor: grab;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-body > footer > img:active { cursor: grabbing; }
 
 noscript {
     display: flex;

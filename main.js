@@ -912,14 +912,15 @@ const resetSiteBtn = document.getElementById("reset-site-btn");
 const toggleFullscreenBtn = document.getElementById("toggle-fullscreen-btn");
 const openHeaderBtn = document.getElementById("open-header-btn");
 
+/* --------------------------------- FOOTER --------------------------------- */
+
+const footer = document.querySelector("body > footer");
+const footerImg = footer.querySelector("& > img");
+
 /* ------------------------------ MAIN CONTENT ------------------------------ */
 
 const mainElt = document.querySelector("main");
 const toTopBtn = document.getElementById("to-top-btn");
-
-/* --------------------------------- FOOTER --------------------------------- */
-
-const footerImg = document.querySelector("body > footer > img");
 
 /* ------------------------------ SECTION PAGES ----------------------------- */
 
@@ -982,10 +983,9 @@ addEventListener("DOMContentLoaded", () => { // wait for the site to finish load
         headerTitleContainer.style.left = "0%";
 
         headerNavSections.item(0).style.left = "0%";
-        headerNavSections.item(1).style.right = "0%";
+        headerNavSections.item(1).style.right = "0%"
 
         footerImg.style.rotate = "0deg";
-
         openHeader();
     });
 }, { once: true });
@@ -1010,6 +1010,8 @@ openHeaderBtn.addEventListener("click", () => {
     closePage();
     openHeader();
 });
+
+/* --------------------------------- FOOTER --------------------------------- */
 
 /* ------------------------------ MAIN CONTENT ------------------------------ */
 
@@ -1283,8 +1285,8 @@ function openHeader() {
         closedHeaderBtnsIntervalId = null;
     }
 
-    footerImg.style.translate = "-50% 56%";
-    footerImg.addEventListener("transitionend", () => {
+    footer.style.bottom = "-44%";
+    footer.addEventListener("transitionend", () => {
         footerImgEventAborter = new AbortController(); // abort controllers allows us to remove event listeners all at once without needing to reference the callback functions themselves
 
         let isRotating = false;
@@ -1296,8 +1298,7 @@ function openHeader() {
         /** @type {number | null} */
         let startingRotation = null;
 
-        footerImg.style.transitionProperty = "translate"; // remove the "rotate" CSS property from transitioning (to prevent sudden direction changes when rotating the plate)
-
+        footerImg.style.transitionProperty = "none";
         footerImg.addEventListener("pointerdown", ({ pointerId, clientX }) => {
             if (isRotating) return;
             isRotating = true;
@@ -1380,7 +1381,7 @@ function closeHeader() {
         openHeaderBtn.style.backgroundPositionX = `${-openHeaderBtnFrameIdx * 100}%`;
     }, 8);
 
-    footerImg.style.translate = "-50% 100%";
+    footer.style.bottom = "-100%";
 
     footerImgEventAborter?.abort(); // "?." means that if footerImgEventAborter is not nullish (!== null), then run the "abort" method
     if (footerImgIntervalId !== null) {
