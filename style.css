@@ -386,19 +386,11 @@ body > header > div:nth-child(3) > div {
 
 @media (prefers-color-scheme: dark) { body > header > div:nth-child(3) button { background-image: url("images/icon-atlas-dark.png"); } }
 
-body > footer {
-    box-sizing: border-box;
+body > footer > img {
     position: absolute;
     left: 50%;
     bottom: -100%;
 
-    transition-property: bottom;
-    transition-duration: 1200ms;
-
-    translate: -50%;
-}
-
-body > footer > img {
     width: calc(100dvw - 12px);
     max-width: 600px;
 
@@ -406,9 +398,10 @@ body > footer > img {
 
     border-radius: 100%;
 
-    transition-property: background-image, rotate;
+    transition-property: bottom, background-image, rotate;
     transition-duration: 1200ms;
 
+    translate: -50%;
     rotate: -30deg;
 
     cursor: grab;
