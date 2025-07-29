@@ -1091,11 +1091,13 @@ listOfTopics.addEventListener("click", ({ target }) => {
 
 /* -------------------------------- MINIGAME -------------------------------- */
 
-const gameBoundsResizer = new ResizeObserver(() => { // allows the browser to listen to resize events on a particular event without creating callback functions each time a listener is added
-    const {
-        width: gameBoundsWidth,
-        height: gameBoundsHeight
-    } = gameBounds.getBoundingClientRect();
+const gameBoundsResizer = new ResizeObserver(([{ contentBoxSize }]) => { // allows the browser to listen to resize events on a particular event without creating callback functions each time a listener is added
+    const [{
+        inlineSize: gameBoundsWidth,
+        blockSize: gameBoundsHeight
+    }] = contentBoxSize;
+
+    if (gameBoundsWidth <= 0 || gameBoundsHeight <= 0) return;
 
     const answerBoxes = document.querySelectorAll(".answer-box");
     for (const box of answerBoxes) {
