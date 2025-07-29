@@ -1275,7 +1275,7 @@ function openHeader() {
     }
 
     footer.style.display = "block";
-    requestAnimationFrame(() => footerImg.style.bottom = "-44%");
+    requestAnimationFrame(() => footer.style.bottom = "min(max(-64%, -462px), -154px)");
 
     footer.addEventListener("transitionend", () => {
         footerImgEventAborter = new AbortController(); // abort controllers allows us to remove event listeners all at once without needing to reference the callback functions themselves
@@ -1289,7 +1289,7 @@ function openHeader() {
         /** @type {number | null} */
         let startingRotation = null;
 
-        footerImg.style.transitionProperty = "bottom, background-image";
+        footerImg.style.transitionProperty = "background-image";
         footerImg.addEventListener("pointerdown", ({ pointerId, clientX }) => {
             if (isRotating) return;
             isRotating = true;
@@ -1371,15 +1371,15 @@ function closeHeader() {
         openHeaderBtn.style.backgroundPositionX = `${-openHeaderBtnFrameIdx * 100}%`;
     }, 8);
 
-    footerImg.style.bottom = "-100%";
+    footer.style.bottom = "-100%";
 
-    const footerImgAborter = new AbortController();
-    footerImg.addEventListener("transitionend", ({ target }) => {
-        if (target !== footerImg || footerImg.style.bottom !== "-100%") return;
+    const footerAborter = new AbortController();
+    footer.addEventListener("transitionend", ({ target }) => {
+        if (target !== footer || footer.style.bottom !== "-100%") return;
         footer.style.display = "none";
 
-        footerImgAborter.abort();
-    }, { signal: footerImgAborter.signal });
+        footerAborter.abort();
+    }, { signal: footerAborter.signal });
 
     footerImgEventAborter?.abort(); // "?." means that if footerImgEventAborter is not nullish (!== null), then run the "abort" method
     if (footerImgIntervalId !== null) {
