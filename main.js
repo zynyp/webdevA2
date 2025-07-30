@@ -1378,8 +1378,9 @@ function closeHeader() {
         const isToggleFullscreenBtnActive = toggleFullscreenBtn.matches(":active");
         const isFullscreen = document.fullscreenElement === document.documentElement;
 
-        if (isToggleFullscreenBtnActive) if (toggleFullscreenBtnFrameIdx < 99 + (100 * +isFullscreen)) toggleFullscreenBtnFrameIdx++;
-        else if (toggleFullscreenBtnFrameIdx > (160 * +isFullscreen)) toggleFullscreenBtnFrameIdx--;
+        if (isToggleFullscreenBtnActive) {
+            if (toggleFullscreenBtnFrameIdx < 99 + (100 * +isFullscreen)) toggleFullscreenBtnFrameIdx++;
+        } else if (toggleFullscreenBtnFrameIdx > (160 * +isFullscreen)) toggleFullscreenBtnFrameIdx--;
         else if (isFullscreen && toggleFullscreenBtnFrameIdx < 160) toggleFullscreenBtnFrameIdx++;
 
         toggleFullscreenBtn.style.backgroundPositionX = `${-toggleFullscreenBtnFrameIdx * 100}%`;
@@ -1585,7 +1586,7 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
                 } else {
                     let numOfMovementTicks = 40;
                     const movementIntervalId = setInterval(() => {
-                        box.style.translate = `${Math.random() * 12 - 6}px 0px`;
+                        pairedBox.style.translate = `${Math.random() * 12 - 6}px 0px`;
 
                         numOfMovementTicks--;
                         if (numOfMovementTicks < 0) clearInterval(movementIntervalId);
