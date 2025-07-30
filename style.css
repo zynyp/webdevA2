@@ -579,6 +579,7 @@ main > div[data-page-id="vocabulary-list"] > section {
 }
 
 main > div[data-page-id="vocabulary-list"] > section:nth-of-type(2) { display: none; }
+main > div[data-page-id="vocabulary-list"] > section:nth-of-type(2) > h2 { text-align: center; }
 
 #list-of-topics {
     display: flex;
