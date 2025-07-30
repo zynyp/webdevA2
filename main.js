@@ -897,12 +897,20 @@ let gameTimeoutTimeoutId = null;
 /** @type {number | null} */
 let gameTimerIntervalId = null;
 
-let isMotionReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", ({ matches }) => isMotionReduced = matches);
+const isDarkModeMatcher = matchMedia("(prefers-color-scheme: dark)");
+const isMotionReducedMatcher = matchMedia("(prefers-reduced-motion: reduce)");
+
+let isDarkMode = isDarkModeMatcher.matches;
+let isMotionReduced = isMotionReducedMatcher.matches;
 
 /* -------------------------------------------------------------------------- */
 /*                                  ELEMENTS                                  */
 /* -------------------------------------------------------------------------- */
+
+/* ------------------------------ HEAD ELEMENTS ----------------------------- */
+
+const favicon = document.getElementById("favicon");
+const faviconApple = document.getElementById("favicon-apple");
 
 /* --------------------------------- HEADER --------------------------------- */
 
@@ -994,6 +1002,18 @@ addEventListener("DOMContentLoaded", () => { // wait for the site to finish load
         openHeader();
     });
 }, { once: true });
+
+favicon.href = `images/favicon-${isDarkMode ? "dark" : "light"}.ico`;
+faviconApple.href = `images/favicon-${isDarkMode ? "dark" : "light"}.png`;
+
+isDarkModeMatcher.addEventListener("change", ({ matches }) => {
+    isDarkMode = matches;
+
+    favicon.href = `images/favicon-${matches ? "dark" : "light"}.ico`;
+    faviconApple.href = `images/favicon-${matches ? "dark" : "light"}.png`;
+});
+
+isMotionReducedMatcher.addEventListener("change", ({ matches }) => isMotionReduced = matches);
 
 /* --------------------------------- HEADER --------------------------------- */
 

@@ -7,13 +7,25 @@
 
     "icons": [
         {
-            "src": "favicon.ico",
+            "src": "favicon-light.ico",
             "sizes": "64x64",
             "type": "image/x-icon"
         },
 
         {
-            "src": "favicon.png",
+            "src": "favicon-light.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        },
+
+        {
+            "src": "favicon-dark.ico",
+            "sizes": "64x64",
+            "type": "image/x-icon"
+        },
+
+        {
+            "src": "favicon-dark.png",
             "sizes": "64x64",
             "type": "image/png"
         }
