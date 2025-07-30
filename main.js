@@ -996,7 +996,7 @@ addEventListener("DOMContentLoaded", () => { // wait for the site to finish load
         headerTitleContainer.style.left = "0%";
 
         headerNavSections.item(0).style.left = "0%";
-        headerNavSections.item(1).style.right = "0%"
+        headerNavSections.item(1).style.right = "0%";
 
         footerImg.style.rotate = "0deg";
         openHeader();
@@ -1045,7 +1045,7 @@ resetSiteBtn.addEventListener("click", () => {
     showGameOverlayScreen("settings");
 });
 
-toggleFullscreenBtn.addEventListener("click", () => document.fullscreenElement === document.documentElement ? document.exitFullscreen?.() : document.documentElement.requestFullscreen?.());
+toggleFullscreenBtn.addEventListener("click", () => document.fullscreenElement === document.documentElement ? document.exitFullscreen && document.exitFullscreen() : document.documentElement.requestFullscreen && document.documentElement.requestFullscreen());
 
 openHeaderBtn.addEventListener("click", () => {
     closePage();
@@ -1081,9 +1081,9 @@ for (const table of pronunciationGuideTables) {
         const { soundSrc, soundStart, soundLength } = target.dataset;
 
         const audio = pronunciationGuideAudioFileCache[soundSrc].cloneNode(true);
-        audio.addEventListener("canplaythrough", async () => {
+        audio.addEventListener("canplaythrough", () => {
             audio.currentTime = +soundStart / 1000;
-            await audio.play();
+            audio.play();
         }, { once: true });
 
         audio.addEventListener("playing", () => setTimeout(() => audio.pause(), +soundLength), { once: true });
@@ -1142,7 +1142,7 @@ gameSettingsForm.addEventListener("submit", (evt) => {
     const data = new FormData(gameSettingsForm);
 
     const topics = [];
-    for (const { id } of TOPICS) data.get(`topic-${id}`) === "on" && topics.push(id);
+    for (const { id } of TOPICS) if (data.get(`topic-${id}`) === "on") topics.push(id);
 
     const timeLimitMinutes = +data.get("time-minutes");
     const timeLimitSecs = +data.get("time-seconds");
@@ -1166,6 +1166,7 @@ gameSettingsForm.addEventListener("submit", (evt) => {
 
         setTimeout(() => {
             showGameOverlayScreen("game-over");
+            showGameHeader();
 
             gameFinalScore.textContent = `Your Final Score is: ${finalScore}!`;
             gameRestartBtn.addEventListener("click", showGameOverlayScreen.bind(showGameOverlayScreen, "settings", hideGameOverlayScreen.bind(hideGameOverlayScreen, "game-over", () => {})), { once: true });
@@ -1316,8 +1317,8 @@ function openHeader() {
 
             rotationSpeed = 0;
 
-            startingX ??= clientX; // will only be assigned if startingX is nullish (??= is the nullish-coalescing operator)
-            startingRotation ??= parseFloat(footerImg.style.rotate);
+            if (startingX === null) startingX = clientX;
+            if (startingRotation === null) startingRotation = parseFloat(footerImg.style.rotate);
 
             footerImg.setPointerCapture(pointerId); // always listen to the pointer even when it leaves the element
         }, { signal: footerImgEventAborter.signal });
@@ -1377,16 +1378,14 @@ function closeHeader() {
         const isToggleFullscreenBtnActive = toggleFullscreenBtn.matches(":active");
         const isFullscreen = document.fullscreenElement === document.documentElement;
 
-        isToggleFullscreenBtnActive
-            ? toggleFullscreenBtnFrameIdx < 99 + (100 * +isFullscreen) && toggleFullscreenBtnFrameIdx++
-            : toggleFullscreenBtnFrameIdx > (160 * +isFullscreen)
-                ? toggleFullscreenBtnFrameIdx--
-                : isFullscreen && toggleFullscreenBtnFrameIdx < 160 && toggleFullscreenBtnFrameIdx++;
+        if (isToggleFullscreenBtnActive) if (toggleFullscreenBtnFrameIdx < 99 + (100 * +isFullscreen)) toggleFullscreenBtnFrameIdx++;
+        else if (toggleFullscreenBtnFrameIdx > (160 * +isFullscreen)) toggleFullscreenBtnFrameIdx--;
+        else if (isFullscreen && toggleFullscreenBtnFrameIdx < 160) toggleFullscreenBtnFrameIdx++;
 
         toggleFullscreenBtn.style.backgroundPositionX = `${-toggleFullscreenBtnFrameIdx * 100}%`;
 
         const isOpenHeaderBtnActive = openHeaderBtn.matches(":active");
-        isOpenHeaderBtnActive ? openHeaderBtnFrameIdx < 149 && openHeaderBtnFrameIdx++ : openHeaderBtnFrameIdx > 0 && openHeaderBtnFrameIdx--;
+        if (isOpenHeaderBtnActive && openHeaderBtnFrameIdx < 149) openHeaderBtnFrameIdx++; else if (openHeaderBtnFrameIdx > 0) openHeaderBtnFrameIdx--;
 
         openHeaderBtn.style.backgroundPositionX = `${-openHeaderBtnFrameIdx * 100}%`;
     }, 8);
@@ -1401,7 +1400,7 @@ function closeHeader() {
         footerAborter.abort();
     }, { signal: footerAborter.signal });
 
-    footerImgEventAborter?.abort(); // "?." means that if footerImgEventAborter is not nullish (!== null), then run the "abort" method
+    if (footerImgEventAborter !== null) footerImgEventAborter.abort();
     if (footerImgIntervalId !== null) {
         clearInterval(footerImgIntervalId);
         footerImgIntervalId = null;
@@ -1556,6 +1555,9 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
                 bottom: gameQuestionsBtm
             } = gameQuestions.getBoundingClientRect();
 
+            /** @type {HTMLElement | null} */
+            let pairedBox = null;
+
             if (clientX >= gameQuestionsLeft && clientX <= gameQuestionsRight && clientY >= gameQuestionsTop && clientY <= gameQuestionsBtm) {
                 const questionBoxes = document.querySelectorAll(".question-box");
                 for (const box of questionBoxes) {
@@ -1565,28 +1567,29 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
                     } = box.getBoundingClientRect();
 
                     if (clientX >= boxLeft && clientX <= boxRight) {
-                        if (box.dataset.answer === selectedBox.dataset.answer) {
-                            box.style.scale = "0%";
-                            box.addEventListener("transitionend", () => box.remove(), { once: true });
-
-                            selectedBox.remove();
-
-                            score++;
-                            gameScore.textContent = `Score: ${score}`;
-
-                            break;
-                        }
-
-                        let numOfMovementTicks = 40;
-                        const movementIntervalId = setInterval(() => {
-                            box.style.translate = `${Math.random() * 10 - 5}px 0px`;
-
-                            numOfMovementTicks--;
-                            if (numOfMovementTicks < 0) clearInterval(movementIntervalId);
-                        }, 10);
-
+                        pairedBox = box;
                         break;
                     }
+                }
+            }
+
+            if (pairedBox !== null) {
+                if (pairedBox.dataset.answer === selectedBox.dataset.answer) {
+                    pairedBox.style.scale = "0%";
+                    pairedBox.addEventListener("transitionend", () => pairedBox.remove(), { once: true });
+
+                    selectedBox.remove();
+
+                    score++;
+                    gameScore.textContent = `Score: ${score}`;
+                } else {
+                    let numOfMovementTicks = 40;
+                    const movementIntervalId = setInterval(() => {
+                        box.style.translate = `${Math.random() * 12 - 6}px 0px`;
+
+                        numOfMovementTicks--;
+                        if (numOfMovementTicks < 0) clearInterval(movementIntervalId);
+                    }, 10);
                 }
             }
         }
@@ -1668,6 +1671,8 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
             minTimeoutLength = 1600;
 
             startingNumOfPairs = 4;
+
+            break;
         }
 
         case "MEDIUM": {
@@ -1675,6 +1680,8 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
             minTimeoutLength = 1200;
 
             startingNumOfPairs = 6;
+
+            break;
         }
 
         case "HARD": {
@@ -1682,6 +1689,8 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
             minTimeoutLength = 1000;
 
             startingNumOfPairs = 6;
+
+            break;
         }
 
         default: {
@@ -1689,11 +1698,13 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
             minTimeoutLength = 1600;
 
             startingNumOfPairs = 6;
+
+            break;
         }
     }
 
     addPair();
-    for (const _ of Array(startingNumOfPairs - 1)) {
+    for (let i = 0; i < startingNumOfPairs - 1; i++) {
         const topicId = randItem(topics);
         addGameBoxPair(randItem(TOPICS.find(({ id }) => id === topicId).words));
     }
@@ -1732,7 +1743,7 @@ function endGameLoop() {
 
 function showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs) {
     gameScore.textContent = "Score: 0";
-    gameTimer.textContent = `Time Left: ${timeLimitMinutes}:${`${timeLimitSecs}`.padStart(2, "0")}`
+    gameTimer.textContent = `Time Left: ${timeLimitMinutes}:${`${timeLimitSecs}`.padStart(2, "0")}`;
 
     const gameCountdownAborter = new AbortController();
 
