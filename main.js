@@ -991,8 +991,8 @@ const gameRestartBtn = gameEndSection.querySelector("& > button");
 
 /* ------------------------------ WINDOW (MAIN) ----------------------------- */
 
-addEventListener("DOMContentLoaded", () => { // wait for the site to finish loading the HTML content
-    requestAnimationFrame(() => { // wait for the browser to render the site once before applying the styles to properly display the transition
+addEventListener("DOMContentLoaded", function() { // wait for the site to finish loading the HTML content
+    requestAnimationFrame(function() { // wait for the browser to render the site once before applying the styles to properly display the transition
         headerTitleContainer.style.left = "0%";
 
         headerNavSections.item(0).style.left = "0%";
@@ -1006,25 +1006,27 @@ addEventListener("DOMContentLoaded", () => { // wait for the site to finish load
 favicon.href = `images/favicon-${isDarkMode ? "dark" : "light"}.ico`;
 faviconApple.href = `images/favicon-${isDarkMode ? "dark" : "light"}.png`;
 
-isDarkModeMatcher.addEventListener("change", ({ matches }) => {
+isDarkModeMatcher.addEventListener("change", function({ matches }) {
     isDarkMode = matches;
 
     favicon.href = `images/favicon-${matches ? "dark" : "light"}.ico`;
     faviconApple.href = `images/favicon-${matches ? "dark" : "light"}.png`;
 });
 
-isMotionReducedMatcher.addEventListener("change", ({ matches }) => isMotionReduced = matches);
+isMotionReducedMatcher.addEventListener("change", function({ matches }) {
+    isMotionReduced = matches;
+});
 
 /* --------------------------------- HEADER --------------------------------- */
 
-headerNavContainer.addEventListener("click", ({ target }) => {
+headerNavContainer.addEventListener("click", function({ target }) {
     if (!(target instanceof HTMLButtonElement)) return; // if the clicked element is not a button, don't proceed with the callback function
 
     closeHeader();
     openPage(target.dataset.openPageId);
 });
 
-resetSiteBtn.addEventListener("click", () => {
+resetSiteBtn.addEventListener("click", function() {
     closePage();
     openHeader();
 
@@ -1045,9 +1047,12 @@ resetSiteBtn.addEventListener("click", () => {
     showGameOverlayScreen("settings");
 });
 
-toggleFullscreenBtn.addEventListener("click", () => document.fullscreenElement === document.documentElement ? document.exitFullscreen && document.exitFullscreen() : document.documentElement.requestFullscreen && document.documentElement.requestFullscreen());
+toggleFullscreenBtn.addEventListener("click", function() {
+    if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+});
 
-openHeaderBtn.addEventListener("click", () => {
+openHeaderBtn.addEventListener("click", function() {
     closePage();
     openHeader();
 });
@@ -1056,10 +1061,12 @@ openHeaderBtn.addEventListener("click", () => {
 
 /* ------------------------------ MAIN CONTENT ------------------------------ */
 
-toTopBtn.addEventListener("click", () => mainElt.scrollTo({
-    top: 0,
-    behavior: "smooth"
-}));
+toTopBtn.addEventListener("click", function() {
+    mainElt.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
 
 /* --------------------------- PRONUNCIATION GUIDE -------------------------- */
 
@@ -1076,23 +1083,27 @@ for (const table of pronunciationGuideTables) {
         pronunciationGuideAudioFileCache[soundSrc] = audio;
     }
 
-    table.addEventListener("click", ({ target }) => {
+    table.addEventListener("click", function({ target }) {
         if (!(target instanceof HTMLButtonElement)) return;
         const { soundSrc, soundStart, soundLength } = target.dataset;
 
         const audio = pronunciationGuideAudioFileCache[soundSrc].cloneNode(true);
-        audio.addEventListener("canplaythrough", () => {
+        audio.addEventListener("canplaythrough", function() {
             audio.currentTime = +soundStart / 1000;
             audio.play();
         }, { once: true });
 
-        audio.addEventListener("playing", () => setTimeout(() => audio.pause(), +soundLength), { once: true });
+        audio.addEventListener("playing", function() {
+            setTimeout(function() {
+                audio.pause();
+            }, +soundLength);
+        }, { once: true });
     });
 }
 
 /* ----------------------------- VOCABULARY LIST ---------------------------- */
 
-listOfTopics.addEventListener("click", ({ target }) => {
+listOfTopics.addEventListener("click", function({ target }) {
     if (!(target instanceof HTMLButtonElement)) return;
     const { topicId } = target.dataset;
 
@@ -1111,7 +1122,7 @@ listOfTopics.addEventListener("click", ({ target }) => {
 
 /* -------------------------------- MINIGAME -------------------------------- */
 
-const gameBoundsResizer = new ResizeObserver(([{ contentBoxSize }]) => { // allows the browser to listen to resize events on a particular event without creating callback functions each time a listener is added
+const gameBoundsResizer = new ResizeObserver(function([{ contentBoxSize }]) { // allows the browser to listen to resize events on a particular event without creating callback functions each time a listener is added
     const [{
         inlineSize: gameBoundsWidth,
         blockSize: gameBoundsHeight
@@ -1130,19 +1141,19 @@ const gameBoundsResizer = new ResizeObserver(([{ contentBoxSize }]) => { // allo
         const y = parseFloat(box.style.top);
 
         if (x < 0) box.style.left = "0px";
-        if (x >= gameBoundsWidth - boxWidth) box.style.left = `${gameBoundsWidth - boxWidth - 1}px`;
+        if (x >= gameBoundsWidth - boxWidth) box.style.left = (gameBoundsWidth - boxWidth - 1) + "px";
 
         if (y < 0) box.style.top = "0px";
-        if (y >= gameBoundsHeight - boxHeight) box.style.top = `${gameBoundsHeight - boxHeight - 1}px`;
+        if (y >= gameBoundsHeight - boxHeight) box.style.top = (gameBoundsHeight - boxHeight - 1) + "px";
     }
 });
 
-gameSettingsForm.addEventListener("submit", (evt) => {
+gameSettingsForm.addEventListener("submit", function(evt) {
     evt.preventDefault(); // prevent default form redirect after submitting the form
     const data = new FormData(gameSettingsForm);
 
     const topics = [];
-    for (const { id } of TOPICS) if (data.get(`topic-${id}`) === "on") topics.push(id);
+    for (const { id } of TOPICS) if (data.get("topic-" + id) === "on") topics.push(id);
 
     const timeLimitMinutes = +data.get("time-minutes");
     const timeLimitSecs = +data.get("time-seconds");
@@ -1154,22 +1165,22 @@ gameSettingsForm.addEventListener("submit", (evt) => {
     gameQuestions.replaceChildren([]);
 
     hideGameHeader();
-    hideGameOverlayScreen("settings", () => {
+    hideGameOverlayScreen("settings", function() {
         const secondsBeforeStart = 3;
 
         showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs);
-        if (gameStartingTimeoutId === null) gameStartingTimeoutId = setTimeout(startGameLoop.bind(startGameLoop, { topics, totalTimeLimit: timeLimitMinutes * 60 + timeLimitSecs, difficulty, onGameEnd }), secondsBeforeStart * 1000); // .bind is a short-form of () => funcName(...params)
+        if (gameStartingTimeoutId === null) gameStartingTimeoutId = setTimeout(startGameLoop.bind(startGameLoop, { topics, totalTimeLimit: timeLimitMinutes * 60 + timeLimitSecs, difficulty, onGameEnd }), secondsBeforeStart * 1000); // .bind(thisArg, ...params) is a short-form of function() { this = funcName; funcName(...params); }
     });
 
     function onGameEnd(finalScore) {
         showEndGameUI();
 
-        setTimeout(() => {
+        setTimeout(function() {
             showGameOverlayScreen("game-over");
             showGameHeader();
 
-            gameFinalScore.textContent = `Your Final Score is: ${finalScore}!`;
-            gameRestartBtn.addEventListener("click", showGameOverlayScreen.bind(showGameOverlayScreen, "settings", hideGameOverlayScreen.bind(hideGameOverlayScreen, "game-over", () => {})), { once: true });
+            gameFinalScore.textContent = "Your Final Score is: " + finalScore + "!";
+            gameRestartBtn.addEventListener("click", showGameOverlayScreen.bind(showGameOverlayScreen, "settings", hideGameOverlayScreen.bind(hideGameOverlayScreen, "game-over", function() {})), { once: true });
 
             gameStartingTimeoutId = null;
         }, 2400);
@@ -1177,7 +1188,7 @@ gameSettingsForm.addEventListener("submit", (evt) => {
 });
 
 for (const { id, name } of TOPICS) {
-    const inputId = `topic-${id}`;
+    const inputId = "topic-" + id;
 
     const div = document.createElement("div");
 
@@ -1199,14 +1210,14 @@ for (const { id, name } of TOPICS) {
     gameSettingsTopics.appendChild(div);
 }
 
-gameTimeLimitMinutesOption.addEventListener("input", () => {
+gameTimeLimitMinutesOption.addEventListener("input", function() {
     const { value: minutes } = gameTimeLimitMinutesOption;
 
     if (minutes < 0) gameTimeLimitMinutesOption.value = 0;
     if (minutes <= 0 && gameTimeLimitSecondsOption.value <= 0) gameTimeLimitSecondsOption.value = "01";
 });
 
-gameTimeLimitSecondsOption.addEventListener("input", () => {
+gameTimeLimitSecondsOption.addEventListener("input", function() {
     const { value: seconds } = gameTimeLimitSecondsOption;
 
     if (seconds < 0) {
@@ -1220,7 +1231,7 @@ gameTimeLimitSecondsOption.addEventListener("input", () => {
     }
 
     if (gameTimeLimitMinutesOption.value <= 0 && seconds <= 0) gameTimeLimitSecondsOption.value = 1;
-    gameTimeLimitSecondsOption.value = `${gameTimeLimitSecondsOption.value}`.padStart(2, "0");
+    gameTimeLimitSecondsOption.value = gameTimeLimitSecondsOption.value.toString().padStart(2, "0");
 });
 
 /* -------------------------------------------------------------------------- */
@@ -1238,7 +1249,7 @@ function openPage(pageId) {
     mainElt.style.display = "flex";
     mainElt.style.transitionDelay = "400ms";
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(function() {
         mainElt.style.opacity = "100%";
 
         mainElt.style.rotate = "0deg";
@@ -1260,7 +1271,7 @@ function closePage() {
     mainElt.style.scale = "80%";
     mainElt.style.translate = "0% 20%";
 
-    mainElt.addEventListener("transitionend", ({ target }) => {
+    mainElt.addEventListener("transitionend", function({ target }) {
         if (target !== mainElt || mainElt.style.translate !== "0% 20%") return;
 
         mainElt.style.display = "none";
@@ -1283,7 +1294,7 @@ function openHeader() {
 
     closedHeaderBar.style.top = "-100%";
     closedHeaderBar.style.transitionDelay = "0ms";
-    closedHeaderBar.addEventListener("transitionend", ({ target }) => { // transitionend events occur when a CSS transition finishes
+    closedHeaderBar.addEventListener("transitionend", function({ target }) { // transitionend events occur when a CSS transition finishes
         if (target !== closedHeaderBar || closedHeaderBar.style.top !== "-100%") return; // stop the event if children elements has finished its transitions or if the parent element has incorrect styles
 
         closedHeaderBar.style.display = "none";
@@ -1296,9 +1307,11 @@ function openHeader() {
     }
 
     footer.style.display = "block";
-    requestAnimationFrame(() => footer.style.bottom = "min(max(-64%, -462px), -154px)");
+    requestAnimationFrame(function() {
+        footer.style.bottom = "min(max(-64%, -462px), -154px)";
+    });
 
-    footer.addEventListener("transitionend", () => {
+    footer.addEventListener("transitionend", function() {
         footerImgEventAborter = new AbortController(); // abort controllers allows us to remove event listeners all at once without needing to reference the callback functions themselves
 
         let isRotating = false;
@@ -1311,7 +1324,7 @@ function openHeader() {
         let startingRotation = null;
 
         footerImg.style.transitionProperty = "background-image";
-        footerImg.addEventListener("pointerdown", ({ pointerId, clientX }) => {
+        footerImg.addEventListener("pointerdown", function({ pointerId, clientX }) {
             if (isRotating) return;
             isRotating = true;
 
@@ -1323,7 +1336,7 @@ function openHeader() {
             footerImg.setPointerCapture(pointerId); // always listen to the pointer even when it leaves the element
         }, { signal: footerImgEventAborter.signal });
 
-        footerImg.addEventListener("pointerup", ({ pointerId }) => {
+        footerImg.addEventListener("pointerup", function({ pointerId }) {
             if (!isRotating) return;
             isRotating = false;
 
@@ -1333,18 +1346,18 @@ function openHeader() {
             footerImg.releasePointerCapture(pointerId);
         }, { signal: footerImgEventAborter.signal });
 
-        footerImg.addEventListener("pointermove", ({ clientX, movementX }) => {
+        footerImg.addEventListener("pointermove", function({ clientX, movementX }) {
             if (!isRotating || startingX === null || startingRotation === null) return;
 
             rotationSpeed = movementX * 0.4;
-            footerImg.style.rotate = `${startingRotation + (clientX - startingX) / 3}deg`;
+            footerImg.style.rotate = (startingRotation + (clientX - startingX) / 3) + "deg";
         }, { signal: footerImgEventAborter.signal });
 
-        if (footerImgIntervalId === null) footerImgIntervalId = setInterval(() => {
+        if (footerImgIntervalId === null) footerImgIntervalId = setInterval(function() {
             if (isRotating) return;
 
             const prevRotation = parseFloat(footerImg.style.rotate);
-            footerImg.style.rotate = `${prevRotation + Math.floor(rotationSpeed * 1000) / 1000}deg`;
+            footerImg.style.rotate = (prevRotation + Math.floor(rotationSpeed * 1000) / 1000) + "deg";
 
             rotationSpeed *= 0.97;
         });
@@ -1359,10 +1372,12 @@ function closeHeader() {
 
     closedHeaderBar.style.display = "flex";
     closedHeaderBar.style.transitionDelay = "400ms";
-    requestAnimationFrame(() => closedHeaderBar.style.top = "100%");
+    requestAnimationFrame(function() {
+        closedHeaderBar.style.top = "100%";
+    });
 
     const closedHeaderBarAborter = new AbortController();
-    closedHeaderBar.addEventListener("transitionend", ({ target }) => {
+    closedHeaderBar.addEventListener("transitionend", function({ target }) {
         if (target !== closedHeaderBar || header.style.translate !== "0% -100%") return;
 
         headerTitleContainer.style.display = "none";
@@ -1374,7 +1389,7 @@ function closeHeader() {
     let toggleFullscreenBtnFrameIdx = 0;
     let openHeaderBtnFrameIdx = 0;
 
-    if (closedHeaderBtnsIntervalId === null) closedHeaderBtnsIntervalId = setInterval(() => {
+    if (closedHeaderBtnsIntervalId === null) closedHeaderBtnsIntervalId = setInterval(function() {
         const isToggleFullscreenBtnActive = toggleFullscreenBtn.matches(":active");
         const isFullscreen = document.fullscreenElement === document.documentElement;
 
@@ -1383,18 +1398,18 @@ function closeHeader() {
         } else if (toggleFullscreenBtnFrameIdx > (160 * +isFullscreen)) toggleFullscreenBtnFrameIdx--;
         else if (isFullscreen && toggleFullscreenBtnFrameIdx < 160) toggleFullscreenBtnFrameIdx++;
 
-        toggleFullscreenBtn.style.backgroundPositionX = `${-toggleFullscreenBtnFrameIdx * 100}%`;
+        toggleFullscreenBtn.style.backgroundPositionX = (-toggleFullscreenBtnFrameIdx * 100) + "%";
 
         const isOpenHeaderBtnActive = openHeaderBtn.matches(":active");
         if (isOpenHeaderBtnActive && openHeaderBtnFrameIdx < 149) openHeaderBtnFrameIdx++; else if (openHeaderBtnFrameIdx > 0) openHeaderBtnFrameIdx--;
 
-        openHeaderBtn.style.backgroundPositionX = `${-openHeaderBtnFrameIdx * 100}%`;
+        openHeaderBtn.style.backgroundPositionX = (-openHeaderBtnFrameIdx * 100) + "%";
     }, 8);
 
     footer.style.bottom = "-100%";
 
     const footerAborter = new AbortController();
-    footer.addEventListener("transitionend", ({ target }) => {
+    footer.addEventListener("transitionend", function({ target }) {
         if (target !== footer || footer.style.bottom !== "-100%") return;
         footer.style.display = "none";
 
@@ -1414,7 +1429,9 @@ function openTopicCard(topicId) {
     const {
         desc: topicDesc,
         words: topicWords
-    } = TOPICS.find(({ id }) => id === topicId);
+    } = TOPICS.find(function({ id }) {
+        return id === topicId;
+    });
 
     topicCard.dataset.currentTopic = topicId;
     topicCardSection.style.display = "block";
@@ -1475,7 +1492,7 @@ function unhighlightTopicBtns() {
 
 /* -------------------------------- MINIGAME -------------------------------- */
 
-function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {} }) {
+function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = function() {} }) {
     if (hasGameStarted) return;
 
     hasGameStarted = true;
@@ -1497,7 +1514,7 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
     let selectedBoxWidth = 0;
     let selectedBoxHeight = 0;
 
-    gameAnswers.addEventListener("pointerdown", ({ target, clientX, clientY, pointerId }) => {
+    gameAnswers.addEventListener("pointerdown", function({ target, clientX, clientY, pointerId }) {
         if (selectedBox !== null) return;
 
         while (!target.classList.contains("answer-box") && target !== document.body) target = target.parentElement;
@@ -1531,7 +1548,7 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
         gameAnswers.setPointerCapture(pointerId);
     }, { signal: gameAborter.signal });
 
-    gameAnswers.addEventListener("pointerup", ({ clientX, clientY, pointerId }) => {
+    gameAnswers.addEventListener("pointerup", function ({ clientX, clientY, pointerId }) {
         if (selectedBox === null) return;
 
         const {
@@ -1577,15 +1594,15 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
             if (pairedBox !== null) {
                 if (pairedBox.dataset.answer === selectedBox.dataset.answer) {
                     pairedBox.style.scale = "0%";
-                    pairedBox.addEventListener("transitionend", () => pairedBox.remove(), { once: true });
+                    pairedBox.addEventListener("transitionend", pairedBox.remove, { once: true });
 
                     selectedBox.remove();
 
                     score++;
-                    gameScore.textContent = `Score: ${score}`;
+                    gameScore.textContent = "Score: " + score;
                 } else {
                     let numOfMovementTicks = 40;
-                    const movementIntervalId = setInterval(() => {
+                    const movementIntervalId = setInterval(function() {
                         pairedBox.style.translate = `${Math.random() * 12 - 6}px 0px`;
 
                         numOfMovementTicks--;
@@ -1595,13 +1612,13 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
             }
         }
 
-        selectedBox.dataset.rotation = `${selectedBoxRotation}`;
+        selectedBox.dataset.rotation = selectedBoxRotation.toString();
         selectedBox = null;
 
         gameAnswers.releasePointerCapture(pointerId);
     }, { signal: gameAborter.signal });
 
-    gameAnswers.addEventListener("pointermove", ({ clientX, clientY, movementX }) => {
+    gameAnswers.addEventListener("pointermove", function({ clientX, clientY, movementX }) {
         if (selectedBox === null) return;
 
         const {
@@ -1623,8 +1640,8 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
 
         selectedBoxRotation += movementX;
 
-        selectedBox.style.left = `${clampedLeft}px`;
-        selectedBox.style.top = `${clampedTop}px`;
+        selectedBox.style.left = clampedLeft + "px";
+        selectedBox.style.top = clampedTop + "px";
 
         if ((clampedLeft === left && clampedTop === top) || x < 0 || x >= gameBoundsWidth || y < 0 || y >= gameBoundsHeight) return;
 
@@ -1647,18 +1664,18 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
     }, { signal: gameAborter.signal });
 
     gameBoundsResizer.observe(gameBounds);
-    gameAnswersIntervalId = setInterval(() => {
+    gameAnswersIntervalId = setInterval(function() {
         const answerBoxes = document.querySelectorAll(".answer-box");
         for (const box of answerBoxes) {
             if (box === selectedBox) {
                 selectedBoxRotation += ((selectedBoxOffsetX / selectedBoxWidth - 0.5) * (-Math.atan2(selectedBoxHeight, selectedBoxWidth) * 180 / Math.PI) * Math.max((0.5 - selectedBoxOffsetY / selectedBoxHeight) * 2, 0) - selectedBoxRotation) / 25;
-                selectedBox.style.rotate = `${selectedBoxRotation * +!isMotionReduced}deg`;
+                selectedBox.style.rotate = (selectedBoxRotation * +!isMotionReduced) + "deg";
 
                 continue;
             }
 
-            box.dataset.rotation = `${+box.dataset.rotation * 0.96}`;
-            box.style.rotate = `${+box.dataset.rotation * +!isMotionReduced}deg`;
+            box.dataset.rotation = (+box.dataset.rotation * 0.96).toString();
+            box.style.rotate = (+box.dataset.rotation * +!isMotionReduced) + "deg";
         }
     });
 
@@ -1707,12 +1724,14 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
     addPair();
     for (let i = 0; i < startingNumOfPairs - 1; i++) {
         const topicId = randItem(topics);
-        addGameBoxPair(randItem(TOPICS.find(({ id }) => id === topicId).words));
+        addGameBoxPair(randItem(TOPICS.find(function({ id }) {
+            return id === topicId;
+        }).words));
     }
 
-    gameTimerIntervalId = setInterval(() => {
+    gameTimerIntervalId = setInterval(function() {
         totalTimeLimit--;
-        gameTimer.textContent = `Time Left: ${Math.floor(totalTimeLimit / 60)}:${`${totalTimeLimit % 60}`.padStart(2, "0")}`;
+        gameTimer.textContent = `Time Left: ${Math.floor(totalTimeLimit / 60)}:${(totalTimeLimit % 60).toString().padStart(2, "0")}`;
 
         if (totalTimeLimit <= 0) {
             endGameLoop();
@@ -1724,7 +1743,9 @@ function startGameLoop({ topics, totalTimeLimit, difficulty, onGameEnd = () => {
         if (timeoutLength > minTimeoutLength) timeoutLength -= 10;
 
         const topicId = randItem(topics);
-        addGameBoxPair(randItem(TOPICS.find(({ id }) => id === topicId).words));
+        addGameBoxPair(randItem(TOPICS.find(function({ id }) {
+            return id === topicId;
+        }).words));
 
         gameTimeoutTimeoutId = setTimeout(addPair, timeoutLength);
     }
@@ -1744,11 +1765,11 @@ function endGameLoop() {
 
 function showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs) {
     gameScore.textContent = "Score: 0";
-    gameTimer.textContent = `Time Left: ${timeLimitMinutes}:${`${timeLimitSecs}`.padStart(2, "0")}`;
+    gameTimer.textContent = `Time Left: ${timeLimitMinutes}:${timeLimitSecs.toString().padStart(2, "0")}`;
 
     const gameCountdownAborter = new AbortController();
 
-    gameCountdown.textContent = `${secondsBeforeStart + 1}`;
+    gameCountdown.textContent = (secondsBeforeStart + 1).toString();
     gameCountdown.style.display = "block";
     gameCountdown.style.transitionProperty = "none";
     gameCountdown.style.scale = "0%";
@@ -1756,7 +1777,7 @@ function showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs) {
     showNextCountdownStage();
     if (gameCountdownIntervalId === null) gameCountdownIntervalId = setInterval(showNextCountdownStage, 1000);
 
-    gameCountdown.addEventListener("transitionend", () => {
+    gameCountdown.addEventListener("transitionend", function() {
         if (gameCountdown.textContent !== "GO!") return;
         gameCountdown.style.display = "none";
 
@@ -1771,12 +1792,16 @@ function showStartGameUI(secondsBeforeStart, timeLimitMinutes, timeLimitSecs) {
         gameCountdown.style.scale = "100%";
 
         const numOfSecsLeft = +gameCountdown.textContent;
-        gameCountdown.textContent = `${numOfSecsLeft - 1 || "GO!"}`;
+        const nextSec = numOfSecsLeft - 1;
 
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-            gameCountdown.style.transitionProperty = "scale";
-            gameCountdown.style.scale = "0%";
-        }));
+        gameCountdown.textContent = nextSec > 0 ? nextSec.toString() : "GO!";
+
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                gameCountdown.style.transitionProperty = "scale";
+                gameCountdown.style.scale = "0%";
+            });
+        });
     }
 }
 
@@ -1784,7 +1809,11 @@ function showEndGameUI() {
     gameCountdown.style.display = "block";
     gameCountdown.style.fontSize = "3.6rem";
 
-    requestAnimationFrame(() => requestAnimationFrame(() => gameCountdown.style.scale = "100%"));
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            gameCountdown.style.scale = "100%";
+        });
+    });
 
     gameCountdown.textContent = "TIME'S UP!";
 }
@@ -1793,7 +1822,7 @@ function showGameHeader() {
     gameTitle.style.display = "block";
     gameDesc.style.display = "block";
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(function() {
         gameTitle.style.marginBlockStart = "0.6rem";
         gameTitle.style.marginBlockEnd = "0.8rem";
 
@@ -1810,22 +1839,32 @@ function hideGameHeader() {
     gameTitle.style.marginBlockStart = "0rem";
     gameTitle.style.marginBlockEnd = "0rem";
     gameTitle.style.fontSize = "0rem";
-    gameTitle.addEventListener("transitionend", () => gameTitle.style.display = "none", { once: true });
+    gameTitle.addEventListener("transitionend", function() {
+        gameTitle.style.display = "none";
+    }, { once: true });
 
     gameDesc.style.marginBlockStart = "0rem";
     gameDesc.style.marginBlockEnd = "0rem";
     gameDesc.style.fontSize = "0rem";
-    gameDesc.addEventListener("transitionend", () => gameDesc.style.display = "none", { once: true });
+    gameDesc.addEventListener("transitionend", function() {
+        gameDesc.style.display = "none";
+    }, { once: true });
 }
 
-function showGameOverlayScreen(id, onFinishShow = () => {}) {
-    const overlayScreen = gameOverlayScreens.find(({ dataset: { screenId } }) => id === screenId);
+function showGameOverlayScreen(id, onFinishShow = function() {}) {
+    const overlayScreen = gameOverlayScreens.find(function({ dataset: { screenId } }){
+        return id === screenId;
+    });
 
     overlayScreen.style.display = id === "game-over" ? "flex" : "block";
-    requestAnimationFrame(() => requestAnimationFrame(() => overlayScreen.style.top = "0%"));
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            overlayScreen.style.top = "0%";
+        });
+    });
 
     const overlayScreenAborter = new AbortController();
-    overlayScreen.addEventListener("transitionend", ({ target }) => {
+    overlayScreen.addEventListener("transitionend", function({ target }) {
         if (target !== overlayScreen || (overlayScreen.style.display !== "flex" && overlayScreen.style.display !== "block")) return;
 
         gameAnswers.style.display = "none";
@@ -1838,13 +1877,16 @@ function showGameOverlayScreen(id, onFinishShow = () => {}) {
     }, { signal: overlayScreenAborter.signal });
 }
 
-function hideGameOverlayScreen(id, onFinishHide = () => {}) {
-    const overlayScreen = gameOverlayScreens.find(({ dataset: { screenId } }) => id === screenId);
+function hideGameOverlayScreen(id, onFinishHide = function() {}) {
+    const overlayScreen = gameOverlayScreens.find(function({ dataset: { screenId } }) {
+        return id === screenId;
+    });
+
     overlayScreen.style.top = "-100%";
 
     const overlayScreenAborter = new AbortController();
 
-    overlayScreen.addEventListener("transitionend", ({ target }) => {
+    overlayScreen.addEventListener("transitionend", function({ target }) {
         if (target !== overlayScreen || overlayScreen.style.top !== "-100%") return;
 
         overlayScreen.style.display = "none";
@@ -1852,7 +1894,9 @@ function hideGameOverlayScreen(id, onFinishHide = () => {}) {
 
         onFinishHide();
 
-        if (gameOverlayScreens.some(({ style: { display } }) => display !== "none" && display !== "")) return;
+        if (gameOverlayScreens.some(function({ style: { display } }) {
+            return display !== "none" && display !== "";
+        })) return;
 
         gameAnswers.style.display = "block";
         gameQuestions.style.display = "flex";
@@ -1908,8 +1952,8 @@ function addGameBoxPair(answer) {
 
     answerBox.style.scale = "0%";
 
-    answerBox.style.left = `${Math.random() * (gameAnswersWidth - answerBoxWidth)}px`;
-    answerBox.style.top = `${Math.random() * (gameAnswersHeight - answerBoxHeight)}px`;
+    answerBox.style.left = (Math.random() * (gameAnswersWidth - answerBoxWidth)) + "px";
+    answerBox.style.top = (Math.random() * (gameAnswersHeight - answerBoxHeight)) + "px";
 
     const questionBox = document.createElement("article");
     questionBox.classList.add("question-box");
@@ -1922,12 +1966,14 @@ function addGameBoxPair(answer) {
     questionBox.appendChild(questionTitle);
     gameQuestions.appendChild(questionBox);
 
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-        answerBox.style.transitionProperty = "scale";
-        answerBox.style.scale = "100%";
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            answerBox.style.transitionProperty = "scale";
+            answerBox.style.scale = "100%";
 
-        questionBox.style.left = "0%";
-    }));
+            questionBox.style.left = "0%";
+        });
+    });
 }
 
 /* -------------------------------------------------------------------------- */
